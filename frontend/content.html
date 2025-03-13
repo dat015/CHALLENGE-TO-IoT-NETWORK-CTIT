@@ -1,0 +1,47 @@
+<!-- content.html -->
+<section id="dashboard" class="section">
+    <div class="container">
+        <div class="card">
+            <h2>Nhiệt độ</h2>
+            <span class="value" id="temperature">0</span>
+            <span class="unit">°C</span>
+            <div class="status" id="tempStatus">Đang kết nối...</div>
+        </div>
+        <div class="card">
+            <h2>Độ ẩm không khí</h2>
+            <span class="value" id="humidity">0</span>
+            <span class="unit">%</span>
+            <div class="status" id="humidStatus">Đang kết nối...</div>
+        </div>
+        <div class="card">
+            <h2>Ánh sáng</h2>
+            <span class="value" id="light">0</span>
+            <span class="unit">lux</span>
+            <div class="status" id="lightStatus">Đang kết nối...</div>
+        </div>
+        <div class="card">
+            <h2>Độ ẩm đất</h2>
+            <span class="value" id="soilMoisture">0</span>
+            <span class="unit">%</span>
+            <div class="status" id="soilStatus">Đang kết nối...</div>
+        </div>
+
+        <!-- Bốn biểu đồ riêng biệt với kích thước nhỏ hơn và khoảng cách lớn hơn -->
+        <div class="chart-container" style="width: 500px; margin-bottom: 40px;">
+            <h3>Nhiệt độ (°C)</h3>
+            <canvas id="tempChart"></canvas>
+        </div>
+        <div class="chart-container" style="width: 500px; margin-bottom: 40px;">
+            <h3>Độ ẩm không khí (%)</h3>
+            <canvas id="humidityChart"></canvas>
+        </div>
+        <div class="chart-container" style="width: 500px; margin-bottom: 40px;">
+            <h3>Ánh sáng (lux)</h3>
+            <canvas id="lightChart"></canvas>
+        </div>
+        <div class="chart-container" style="width: 500px; margin-bottom: 40px;">
+            <h3>Độ ẩm đất (%)</h3>
+            <canvas id="soilMoistureChart"></canvas>
+        </div>
+    </div>
+</section>
