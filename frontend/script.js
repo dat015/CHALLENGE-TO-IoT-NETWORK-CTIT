@@ -1,6 +1,15 @@
-// script.js
 document.addEventListener('DOMContentLoaded', () => {
     const contentDiv = document.getElementById('content');
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    let carouselSlides, prevBtn, nextBtn, slides;
+    let currentSlide = 0;
+    let slideInterval;
+
+    // Toggle hamburger menu
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
 
     // Hàm tải nội dung từ file HTML
     function loadContent(file) {
@@ -14,7 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 contentDiv.innerHTML = data;
                 if (file === 'content.html') {
-                    initializeDashboard(); // Khởi tạo dashboard nếu là content.html
+                    initializeDashboard();
+                }
+                if (file === 'home.html') {
+                    initializeCarousel();
                 }
             })
             .catch(error => {
@@ -23,22 +35,77 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // Sử dụng Event Delegation để xử lý click trên tất cả các liên kết có data-section
+    // Hàm khởi tạo carousel
+    function initializeCarousel() {
+        carouselSlides = document.querySelector('.carousel-slides-home');
+        prevBtn = document.querySelector('.prev-btn');
+        nextBtn = document.querySelector('.next-btn');
+        slides = document.querySelectorAll('.slide1');
+
+        if (!carouselSlides || slides.length === 0) {
+            console.error('Không tìm thấy carousel hoặc slide!');
+            return;
+        }
+
+        function showSlide(index) {
+            if (index >= slides.length) currentSlide = 0;
+            else if (index < 0) currentSlide = slides.length - 1;
+            else currentSlide = index;
+
+            // Tính offset dựa trên chiều rộng của mỗi slide (33.33% của container)
+            const offset = -currentSlide * (100 / slides.length);
+            carouselSlides.style.transform = `translateX(${offset}%)`;
+        }
+
+        function startCarousel() {
+            slideInterval = setInterval(() => {
+                currentSlide++;
+                showSlide(currentSlide);
+            }, 4000);
+        }
+
+        carouselSlides.addEventListener('mouseenter', () => {
+            clearInterval(slideInterval);
+        });
+
+        carouselSlides.addEventListener('mouseleave', () => {
+            startCarousel();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            clearInterval(slideInterval);
+            currentSlide--;
+            showSlide(currentSlide);
+            startCarousel();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            clearInterval(slideInterval);
+            currentSlide++;
+            showSlide(currentSlide);
+            startCarousel();
+        });
+
+        showSlide(currentSlide);
+        startCarousel();
+    }
+
+    // Xử lý click trên tất cả các liên kết có data-section
     document.body.addEventListener('click', (e) => {
         const link = e.target.closest('a[data-section]');
         if (link) {
-            e.preventDefault(); // Ngăn hành vi mặc định của liên kết
+            e.preventDefault();
             const sectionFile = link.getAttribute('data-section');
             if (sectionFile) {
                 loadContent(sectionFile);
+                navLinks.classList.remove('active');
             }
         }
     });
 
-    // Tải Trang chủ mặc định khi trang được load
     loadContent('home.html');
 
-    // Hàm khởi tạo Dashboard (giữ nguyên từ trước)
+    // Hàm khởi tạo Dashboard (giữ nguyên)
     function initializeDashboard() {
         const tempChart = createChart('tempChart', 'Nhiệt độ (°C)', '#00ffcc');
         const humidityChart = createChart('humidityChart', 'Độ ẩm không khí (%)', '#ffeb3b');
@@ -63,12 +130,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 options: {
                     scales: {
-                        x: { display: true, title: { display: true, text: 'Thời gian', color: '#fff', font: { size: 14 } }, ticks: { color: '#ccc' } },
-                        y: { display: true, title: { display: true, text: 'Giá trị', color: '#fff', font: { size: 14 } }, beginAtZero: true, ticks: { color: '#ccc' } }
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Thời gian',
+                                color: '#333333',
+                                font: { size: 12 }
+                            },
+                            ticks: { color: '#333333' }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Giá trị',
+                                color: '#333333',
+                                font: { size: 12 }
+                            },
+                            beginAtZero: true,
+                            ticks: { color: '#333333' }
+                        }
                     },
-                    plugins: { legend: { display: true, position: 'top', labels: { color: '#fff', font: { size: 14 } } } },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#333333',
+                                font: { size: 12 }
+                            }
+                        }
+                    },
                     hover: { mode: 'nearest', intersect: true },
-                    elements: { point: { radius: 5, hoverRadius: 7 } }
+                    elements: { point: { radius: 3, hoverRadius: 5 } }
                 }
             });
         }
