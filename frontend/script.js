@@ -20,7 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 contentDiv.innerHTML = data;
                 if (file === 'content.html') {
-                    initializeDashboard();
+                    // Đợi DOM cập nhật hoàn toàn
+                    requestAnimationFrame(() => {
+                        initializeDashboard();
+                    });
                 }
             })
             .catch(error => {
@@ -47,13 +50,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hàm khởi tạo Dashboard
     function initializeDashboard() {
-        // Khởi tạo 2 biểu đồ (chỉ temperature và humidity)
+        // Khởi tạo các biểu đồ
         const tempChart = createChart('tempChart', 'Nhiệt độ (°C)', '#00ffcc');
         const humidityChart = createChart('humidityChart', 'Độ ẩm không khí (%)', '#ffeb3b');
+        const soilMoistureChart = createChart('soilMoistureChart', 'Độ ẩm đất (%)', '#32cd32');
+
+        // Kiểm tra xem tất cả biểu đồ có được tạo thành công không
+        if (!tempChart || !humidityChart || !soilMoistureChart) {
+            console.error('Failed to initialize one or more charts');
+            document.getElementById('tempStatus').textContent = 'Lỗi khởi tạo biểu đồ';
+            document.getElementById('humidStatus').textContent = 'Lỗi khởi tạo biểu đồ';
+            document.getElementById('soilStatus').textContent = 'Lỗi khởi tạo biểu đồ';
+            return;
+        }
 
         // Hàm tạo biểu đồ
         function createChart(canvasId, label, borderColor) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) {
+                console.error(`Canvas element with ID ${canvasId} not found`);
+                return null;
+            }
+            const ctx = canvas.getContext('2d');
             return new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -96,25 +114,30 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!data) {
                 document.getElementById('tempStatus').textContent = 'Lỗi kết nối';
                 document.getElementById('humidStatus').textContent = 'Lỗi kết nối';
+                document.getElementById('soilStatus').textContent = 'Lỗi kết nối';
                 return;
             }
 
             // Cập nhật card
-            document.getElementById('temperature').textContent = `${data.temperature} °C`;
-            document.getElementById('humidity').textContent = `${data.humidity} %`;
+            document.getElementById('temperature').textContent = `${data.temperature || 0} °C`;
+            document.getElementById('humidity').textContent = `${data.humidity || 0} %`;
+            document.getElementById('soilMoisture').textContent = `${data.soilMoisture || 0} %`;
 
             document.getElementById('tempStatus').textContent = 'Đã cập nhật';
             document.getElementById('humidStatus').textContent = 'Đã cập nhật';
+            document.getElementById('soilStatus').textContent = 'Đã cập nhật';
 
             // Cập nhật biểu đồ
             const time = new Date().toLocaleTimeString();
             tempChart.data.labels.push(time);
-            tempChart.data.datasets[0].data.push(data.temperature);
+            tempChart.data.datasets[0].data.push(data.temperature || 0);
             humidityChart.data.labels.push(time);
-            humidityChart.data.datasets[0].data.push(data.humidity);
+            humidityChart.data.datasets[0].data.push(data.humidity || 0);
+            soilMoistureChart.data.labels.push(time);
+            soilMoistureChart.data.datasets[0].data.push(data.soilMoisture || 0);
 
             // Giới hạn 10 điểm dữ liệu
-            [tempChart, humidityChart].forEach(chart => {
+            [tempChart, humidityChart, soilMoistureChart].forEach(chart => {
                 if (chart.data.labels.length > 10) {
                     chart.data.labels.shift();
                     chart.data.datasets[0].data.shift();
@@ -124,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Kết nối với MQTT broker trên HiveMQ Cloud
-        const brokerUrl = 'wss://limealkali-qtypzo.a03.euc1.aws.hivemq.cloud:8884/mqtt'; // HiveMQ Cloud WebSocket Secure
+        const brokerUrl = 'wss://limealkali-qtypzo.a03.euc1.aws.hivemq.cloud:8884/mqtt';
         const options = {
             clientId: 'web_client_' + Math.random().toString(16).substr(2, 8),
             username: 'anhnguyeduc04',
@@ -134,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
             reconnectPeriod: 1000,
         };
 
-        // Tạo client MQTT
         const client = mqtt.connect(brokerUrl, options);
 
         // Sự kiện khi kết nối thành công
@@ -142,14 +164,15 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Connected to HiveMQ Cloud broker');
             document.getElementById('tempStatus').textContent = 'Đã kết nối';
             document.getElementById('humidStatus').textContent = 'Đã kết nối';
+            document.getElementById('soilStatus').textContent = 'Đã kết nối';
 
-            // Subscribe vào topic esp32/dht11
             const topic = 'esp32/dht11';
             client.subscribe(topic, (err) => {
                 if (err) {
                     console.error('Subscription error:', err);
                     document.getElementById('tempStatus').textContent = 'Lỗi đăng ký topic';
                     document.getElementById('humidStatus').textContent = 'Lỗi đăng ký topic';
+                    document.getElementById('soilStatus').textContent = 'Lỗi đăng ký topic';
                 } else {
                     console.log(`Subscribed to ${topic}`);
                 }
@@ -161,12 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Received message from ${topic}: ${message.toString()}`);
             try {
                 const data = JSON.parse(message.toString());
-                // Dữ liệu có dạng: {"temperature":31.3,"humidity":80.0}
+                // Dữ liệu có dạng: {"temperature":31.8,"humidity":79.0,"soilMoisture":0.0}
                 updateDashboard(data);
             } catch (e) {
                 console.error('Invalid JSON:', e);
                 document.getElementById('tempStatus').textContent = 'Dữ liệu không hợp lệ';
                 document.getElementById('humidStatus').textContent = 'Dữ liệu không hợp lệ';
+                document.getElementById('soilStatus').textContent = 'Dữ liệu không hợp lệ';
             }
         });
 
@@ -175,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Connection error:', err);
             document.getElementById('tempStatus').textContent = 'Lỗi kết nối';
             document.getElementById('humidStatus').textContent = 'Lỗi kết nối';
+            document.getElementById('soilStatus').textContent = 'Lỗi kết nối';
         });
 
         // Sự kiện ngắt kết nối
@@ -182,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Connection closed');
             document.getElementById('tempStatus').textContent = 'Ngắt kết nối';
             document.getElementById('humidStatus').textContent = 'Ngắt kết nối';
+            document.getElementById('soilStatus').textContent = 'Ngắt kết nối';
         });
 
         // Sự kiện reconnect
@@ -189,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Reconnecting...');
             document.getElementById('tempStatus').textContent = 'Đang kết nối lại...';
             document.getElementById('humidStatus').textContent = 'Đang kết nối lại...';
+            document.getElementById('soilStatus').textContent = 'Đang kết nối lại...';
         });
     }
 });
