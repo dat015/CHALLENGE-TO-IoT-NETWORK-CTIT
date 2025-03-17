@@ -119,9 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Cập nhật card
-            document.getElementById('temperature').textContent = `${data.temperature || 0} °C`;
-            document.getElementById('humidity').textContent = `${data.humidity || 0} %`;
-            document.getElementById('soilMoisture').textContent = `${data.soilMoisture || 0} %`;
+            document.getElementById('temperature').textContent = `${data.temperature || 0} `;
+            document.getElementById('humidity').textContent = `${data.humidity || 0} `;
+            document.getElementById('soilMoisture').textContent = `${data.soilMoisture || 0} `;
 
             document.getElementById('tempStatus').textContent = 'Đã cập nhật';
             document.getElementById('humidStatus').textContent = 'Đã cập nhật';
