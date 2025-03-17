@@ -2,9 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const contentDiv = document.getElementById('content');
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
-    let carouselSlides, prevBtn, nextBtn, slides;
-    let currentSlide = 0;
-    let slideInterval;
 
     // Toggle hamburger menu
     hamburger.addEventListener('click', () => {
@@ -25,69 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (file === 'content.html') {
                     initializeDashboard();
                 }
-                if (file === 'home.html') {
-                    initializeCarousel();
-                }
             })
             .catch(error => {
                 console.error('Lỗi:', error);
                 contentDiv.innerHTML = `<p style="color: red;">Lỗi: ${error.message}</p>`;
             });
-    }
-
-    // Hàm khởi tạo carousel
-    function initializeCarousel() {
-        carouselSlides = document.querySelector('.carousel-slides-home');
-        prevBtn = document.querySelector('.prev-btn');
-        nextBtn = document.querySelector('.next-btn');
-        slides = document.querySelectorAll('.slide1');
-
-        if (!carouselSlides || slides.length === 0) {
-            console.error('Không tìm thấy carousel hoặc slide!');
-            return;
-        }
-
-        function showSlide(index) {
-            if (index >= slides.length) currentSlide = 0;
-            else if (index < 0) currentSlide = slides.length - 1;
-            else currentSlide = index;
-
-            // Tính offset dựa trên chiều rộng của mỗi slide (33.33% của container)
-            const offset = -currentSlide * (100 / slides.length);
-            carouselSlides.style.transform = `translateX(${offset}%)`;
-        }
-
-        function startCarousel() {
-            slideInterval = setInterval(() => {
-                currentSlide++;
-                showSlide(currentSlide);
-            }, 4000);
-        }
-
-        carouselSlides.addEventListener('mouseenter', () => {
-            clearInterval(slideInterval);
-        });
-
-        carouselSlides.addEventListener('mouseleave', () => {
-            startCarousel();
-        });
-
-        prevBtn.addEventListener('click', () => {
-            clearInterval(slideInterval);
-            currentSlide--;
-            showSlide(currentSlide);
-            startCarousel();
-        });
-
-        nextBtn.addEventListener('click', () => {
-            clearInterval(slideInterval);
-            currentSlide++;
-            showSlide(currentSlide);
-            startCarousel();
-        });
-
-        showSlide(currentSlide);
-        startCarousel();
     }
 
     // Xử lý click trên tất cả các liên kết có data-section
@@ -103,8 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    loadContent('home.html');
+    // Mặc định tải content.html
+    loadContent('content.html');
 
+    // Hàm khởi tạo Dashboard
     function initializeDashboard() {
         // Khởi tạo 2 biểu đồ (chỉ temperature và humidity)
         const tempChart = createChart('tempChart', 'Nhiệt độ (°C)', '#00ffcc');
