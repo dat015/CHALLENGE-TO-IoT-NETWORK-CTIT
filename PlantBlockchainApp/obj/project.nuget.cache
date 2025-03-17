@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "dgSpecHash": "XVqDNjs1S3Q=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Thao\\source\\IoT\\PlantBlockchainApp\\PlantBlockchainApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Thao\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.13\\microsoft.aspnetcore.openapi.8.0.13.nupkg.sha512",
+    "C:\\Users\\Thao\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\Thao\\.nuget\\packages\\microsoft.openapi\\1.6.14\\microsoft.openapi.1.6.14.nupkg.sha512",
+    "C:\\Users\\Thao\\.nuget\\packages\\mqttnet\\4.3.2.930\\mqttnet.4.3.2.930.nupkg.sha512",
+    "C:\\Users\\Thao\\.nuget\\packages\\swashbuckle.aspnetcore\\6.6.2\\swashbuckle.aspnetcore.6.6.2.nupkg.sha512",
+    "C:\\Users\\Thao\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.6.2\\swashbuckle.aspnetcore.swagger.6.6.2.nupkg.sha512",
+    "C:\\Users\\Thao\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.6.2\\swashbuckle.aspnetcore.swaggergen.6.6.2.nupkg.sha512",
+    "C:\\Users\\Thao\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.6.2\\swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "PlantBlockchainApp depends on MQTTnet (>= 4.3.2) but MQTTnet 4.3.2 was not found. An approximate best match of MQTTnet 4.3.2.930 was resolved.",
+      "libraryId": "MQTTnet",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}

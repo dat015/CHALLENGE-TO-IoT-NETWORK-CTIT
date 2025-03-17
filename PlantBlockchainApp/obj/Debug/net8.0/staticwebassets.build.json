@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "rvGn9sJMbkcmN2uygNB6kmJw8Zh7K5vPq1VjernijPY=",
+  "Source": "PlantBlockchainApp",
+  "BasePath": "_content/PlantBlockchainApp",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
