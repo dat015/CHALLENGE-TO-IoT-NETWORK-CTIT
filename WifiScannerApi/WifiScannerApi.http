@@ -1,0 +1,6 @@
+@WifiScannerApi_HostAddress = http://localhost:5069
+
+GET {{WifiScannerApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

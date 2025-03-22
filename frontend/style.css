@@ -728,7 +728,352 @@ footer p {
     transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
+/* Container chứa các nút */
+.control-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Khoảng cách giữa 2 nút */
+    margin-top: 15px;
+}
 
+/* Định kiểu chung cho nút */
+.control-btn {
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 25px; /* Bo góc nút thành hình viên thuốc */
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+}
+
+/* Nút nước */
+.water-btn {
+    background: linear-gradient(135deg, #00b4db, #0083b0); /* Gradient xanh nước */
+}
+
+.water-btn:hover {
+    background: linear-gradient(135deg, #0083b0, #00b4db); /* Đổi màu khi hover */
+    transform: translateY(-2px); /* Nâng nhẹ nút lên */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Tăng đổ bóng */
+}
+
+.water-btn:active {
+    transform: translateY(1px); /* Nhấn xuống khi click */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Giảm đổ bóng */
+}
+
+/* Nút đèn */
+.light-btn {
+    background: linear-gradient(135deg, #ffeb3b, #fbc02d); /* Gradient vàng ánh sáng */
+}
+
+.light-btn:hover {
+    background: linear-gradient(135deg, #fbc02d, #ffeb3b); /* Đổi màu khi hover */
+    transform: translateY(-2px); /* Nâng nhẹ nút lên */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Tăng đổ bóng */
+}
+
+.light-btn:active {
+    transform: translateY(1px); /* Nhấn xuống khi click */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Giảm đổ bóng */
+}
+
+/* Trạng thái bên dưới nút */
+.status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+.wifi-setup {
+    margin-top: 15px;
+    text-align: left;
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.wifi-select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.wifi-select:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.password-input {
+    margin-top: 15px;
+}
+
+.wifi-password {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.wifi-password:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.connect-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #4CAF50, #388E3C);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.connect-btn:hover {
+    background: linear-gradient(135deg, #388E3C, #4CAF50);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.connect-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.wifi-status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+File style.css
+css
+
+Collapse
+
+Wrap
+
+Copy
+/* Reset và style cơ bản */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+}
+
+/* Container chính */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Style cho section */
+.section {
+    padding: 40px 20px;
+}
+
+/* Style cho card (Dashboard) */
+.card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    width: 300px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h2 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.card .value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.card .unit {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.card .status {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* Style cho chart-container (Dashboard) */
+.chart-container {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+.chart-container h3 {
+    margin: 0 0 10px;
+    font-size: 1.3rem;
+    color: #333;
+}
+
+/* Style cho trang Cài đặt và Điều khiển */
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.control-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.control-card {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 350px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.control-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.control-card h2 {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Style cho phần Điều khiển thiết bị */
+.control-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.control-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.control-btn:hover {
+    transform: scale(1.05);
+}
+
+.water-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.water-btn:hover {
+    background-color: #0056b3;
+}
+
+.light-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.light-btn:hover {
+    background-color: #218838;
+}
+
+/* Style cho phần Thiết lập thời gian ngủ */
+.input-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.input-group input[type="number"] {
+    width: 160px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group input[type="number"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.input-group .btn {
+    padding: 10px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.input-group .btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.control-card .status {
+    font-size: 0.9rem;
+    color: #888;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .system-info {
@@ -761,3 +1106,4 @@ footer p {
         font-size: 2em;
     }
 }
+

@@ -1,34 +1,4 @@
-<section id="setup" class="section">
-    <h1>Hướng dẫn cài đặt</h1>
-    <div class="steps">
-        <div class="step">
-            <h3>Bước 1: Mở hộp</h3>
-            <p>Kiểm tra thiết bị và phụ kiện đi kèm (cáp sạc, hướng dẫn).</p>
-        </div>
-        <div class="step">
-            <h3>Bước 2: Kết nối nguồn</h3>
-            <p>Cắm thiết bị vào nguồn điện qua USB.</p>
-        </div>
-        <div class="step">
-            <h3>Bước 3: Kết nối Wi-Fi</h3>
-            <p>Chọn mạng Wi-Fi và nhập mật khẩu để kết nối thiết bị.</p>
-            <div class="wifi-setup">
-                <label for="wifiSelect">Chọn mạng Wi-Fi:</label>
-                <select id="wifiSelect" class="wifi-select" onchange="checkWifiSelection()">
-                    <option value="">-- Chọn mạng Wi-Fi --</option>
-                </select>
-                <div class="password-input" id="passwordInput" style="display: none;">
-                    <label for="wifiPassword">Mật khẩu Wi-Fi:</label>
-                    <input type="password" id="wifiPassword" class="wifi-password" placeholder="Nhập mật khẩu">
-                    <button class="connect-btn" onclick="connectWifi()">Kết nối</button>
-                </div>
-                <div class="wifi-status" id="wifiStatus">Chưa kết nối</div>
-            </div>
-        </div>
-    </div>
-</section>
-<script>
-    function checkWifiSelection() {
+function checkWifiSelection() {
     const wifiSelect = document.getElementById("wifiSelect");
     const passwordInput = document.getElementById("passwordInput");
     if (wifiSelect.value !== "") {
@@ -120,4 +90,3 @@ window.onload = function() {
             wifiStatus.style.color = "#ff4444";
         });
 };
-</script>

@@ -1,6 +1,0 @@
-@PlantBlockchainApp_HostAddress = http://localhost:5278
-
-GET {{PlantBlockchainApp_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -1,0 +1,24 @@
+<section id="control" class="section">
+    <div class="container">
+        <div class="control-wrapper">
+            <!-- Phần Điều khiển thiết bị -->
+            <div class="control-card">
+                <h2>Điều khiển thiết bị</h2>
+                <div class="control-buttons">
+                    <button id="waterButton" class="control-btn water-btn" onclick="toggleWater()">Bật/Tắt Nước</button>
+                    <button id="lightButton" class="control-btn light-btn" onclick="toggleLight()">Bật/Tắt Đèn</button>
+                </div>
+                <div class="status" id="controlStatus">Đang chờ lệnh...</div>
+            </div>
+            <!-- Phần Cài đặt thời gian ngủ -->
+            <div class="control-card">
+                <h2>Thiết lập thời gian ngủ</h2>
+                <div class="input-group">
+                    <input type="number" id="sleepTime" class="form-control" placeholder="Nhập thời gian ngủ (giây)" min="1">
+                    <button class="btn btn-primary" onclick="sendSleepTime()">Gửi</button>
+                </div>
+                <div class="status" id="sleepStatus">Đang chờ lệnh...</div>
+            </div>
+        </div>
+    </div>
+</section>

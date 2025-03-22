@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "e4Cj4dO+WGjdnhRekEemhdbZZWl/G+TEN/6KECICz4o=",
+  "Source": "WifiScannerApi",
+  "BasePath": "_content/WifiScannerApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
