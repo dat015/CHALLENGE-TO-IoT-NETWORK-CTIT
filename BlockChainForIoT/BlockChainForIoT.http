@@ -1,0 +1,6 @@
+@BlockChainForIoT_HostAddress = http://localhost:5267
+
+GET {{BlockChainForIoT_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

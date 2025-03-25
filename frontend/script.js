@@ -263,9 +263,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hàm bật/tắt nước
         window.toggleWater = function () {
             waterState = !waterState;
-            const command = waterState ? 'WATER_ON' : 'WATER_OFF';
+            const command = waterState ? 'ON' : 'OFF';
             if (mqttClient && mqttClient.connected) {
-                mqttClient.publish('anhnguyenduc04/control', command, { qos: 1 }, (err) => {
+                mqttClient.publish('anhnguyenduc04/iot/pump', command, { qos: 1 }, (err) => {
                     if (err) {
                         console.error('Lỗi khi gửi lệnh nước:', err);
                         document.getElementById('controlStatus').textContent = 'Lỗi: ' + err.message;
@@ -283,9 +283,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hàm bật/tắt đèn
         window.toggleLight = function () {
             lightState = !lightState;
-            const command = lightState ? 'LIGHT_ON' : 'LIGHT_OFF';
+            const command = lightState ? 'ON' : 'OFF';
             if (mqttClient && mqttClient.connected) {
-                mqttClient.publish('anhnguyenduc04/control', command, { qos: 1 }, (err) => {
+                mqttClient.publish('anhnguyenduc04/iot/fan', command, { qos: 1 }, (err) => {
                     if (err) {
                         console.error('Lỗi khi gửi lệnh đèn:', err);
                         document.getElementById('controlStatus').textContent = 'Lỗi: ' + err.message;
@@ -302,17 +302,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Hàm gửi thời gian ngủ
         window.sendSleepTime = function () {
-            const sleepTimeInput = document.getElementById('sleepTime');
-            const sleepTime = parseInt(sleepTimeInput.value);
-
+            let hours = parseInt(document.getElementById("hours").value) || 0;
+            let minutes = parseInt(document.getElementById("minutes").value) || 0;
+            let seconds = parseInt(document.getElementById("seconds").value) || 0;
+        
+            // Tính tổng số giây
+            let sleepTime = hours * 3600 + minutes * 60 + seconds;
+                                                                                    
+            // Kiểm tra tính hợp lệ
             if (isNaN(sleepTime) || sleepTime <= 0) {
                 document.getElementById('sleepStatus').textContent = 'Vui lòng nhập số giây hợp lệ (lớn hơn 0)';
                 return;
             }
-
-            if (mqttClient && mqttClient.connected) {
-                const topic = 'anhnguyenduc04/sleep';
+        
+            // Kiểm tra kết nối MQTT trước khi gửi
+            if (typeof mqttClient !== "undefined" && mqttClient.connected) {
+                const topic = 'anhnguyenduc04/iot/sleep';
                 const message = sleepTime.toString();
+        
                 mqttClient.publish(topic, message, { qos: 1 }, (err) => {
                     if (err) {
                         console.error('Lỗi khi gửi thời gian ngủ:', err);
@@ -326,5 +333,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('sleepStatus').textContent = 'Chưa kết nối tới MQTT broker';
             }
         };
+        
     }
 });

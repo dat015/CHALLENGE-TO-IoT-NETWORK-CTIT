@@ -1,3 +1,48 @@
+<style>
+    .time-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+}
+
+.time-container input {
+    width: 40px; /* Giảm kích thước */
+    height: 30px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+}
+
+.input-group span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.btn {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+</style>
+
 <section id="control" class="section">
     <div class="container">
         <div class="control-wrapper">
@@ -10,15 +55,41 @@
                 </div>
                 <div class="status" id="controlStatus">Đang chờ lệnh...</div>
             </div>
+
             <!-- Phần Cài đặt thời gian ngủ -->
             <div class="control-card">
                 <h2>Thiết lập thời gian ngủ</h2>
-                <div class="input-group">
-                    <input type="number" id="sleepTime" class="form-control" placeholder="Nhập thời gian ngủ (giây)" min="1">
+                <div class="i time-container">
+                    <input type="number" id="hours" min="0" max="23" placeholder="hh">
+                    <span>:</span>
+                    <input type="number" id="minutes" min="0" max="59" placeholder="mm">
+                    <span>:</span>
+                    <input type="number" id="seconds" min="0" max="59" placeholder="ss">
                     <button class="btn btn-primary" onclick="sendSleepTime()">Gửi</button>
                 </div>
+                
                 <div class="status" id="sleepStatus">Đang chờ lệnh...</div>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    function sendSleepTime() {
+        let hours = parseInt(document.getElementById("hours").value) || 0;
+        let minutes = parseInt(document.getElementById("minutes").value) || 0;
+        let seconds = parseInt(document.getElementById("seconds").value) || 0;
+
+        // Kiểm tra tính hợp lệ
+        if (hours > 23 || minutes > 59 || seconds > 59) {
+            document.getElementById("sleepStatus").textContent = "Thời gian không hợp lệ!";
+            return;
+        }
+
+        let formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        document.getElementById("sleepStatus").textContent = `Thời gian ngủ: ${formattedTime}`;
+
+        // Bạn có thể gửi dữ liệu này đến server qua Ajax hoặc API nếu cần
+        console.log("Thời gian ngủ đã gửi:", formattedTime);
+    }
+</script>
