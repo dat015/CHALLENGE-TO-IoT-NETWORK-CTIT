@@ -184,4 +184,3 @@ C:\Users\Thao\source\BlockChainForIoT\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAna
 C:\Users\Thao\source\BlockChainForIoT\bin\Debug\net8.0\Docker.DotNet.dll
 C:\Users\Thao\source\BlockChainForIoT\bin\Debug\net8.0\Microsoft.Extensions.Configuration.dll
 C:\Users\Thao\source\BlockChainForIoT\bin\Debug\net8.0\Microsoft.Extensions.Configuration.EnvironmentVariables.dll
-C:\Users\Thao\source\BlockChainForIoT\bin\Debug\net8.0\metadata_cid.json

@@ -15,19 +15,21 @@ namespace BlockChainForIoT.blockchain
         public int Index { get; set; }
         public DateTime TimeStamp { get; set; }
         public string IpfsCid { get; set; } // CID của dữ liệu giao dịch trên IPFS
+        public string DataHash { get; set; } // Hash của dữ liệu gốc
         public string PreviousHash { get; set; }
         public string Hash { get; set; }
         public string AuthorityPublicKey { get; set; } // Thêm khóa công khai của authority
         public string Signature { get; set; } // Thêm chữ ký số
 
         // Constructor cập nhật, bỏ Difficulty và Nonce vì không cần trong PoA
-        public block(int index, string ipfsCid, string previousHash, string authorityPublicKey)
+        public block(int index, string ipfsCid, string previousHash, string authorityPublicKey, string dataHash)
         {
             Index = index;
             TimeStamp = DateTime.Now;
             IpfsCid = ipfsCid;
             PreviousHash = previousHash;
             AuthorityPublicKey = authorityPublicKey;
+            DataHash = dataHash;
             // Signature sẽ được thiết lập sau khi ký
             // Hash sẽ được tính sau khi có Signature
         }
@@ -45,7 +47,7 @@ namespace BlockChainForIoT.blockchain
             {
                 string authKey = AuthorityPublicKey ?? "";
                 string sig = Signature ?? "";
-                string rawData = $"{Index}{TimeStamp:yyyy-MM-ddTHH:mm:ss.fffffffzzz}{IpfsCid}{PreviousHash}{authKey}{sig}";
+                string rawData = $"{Index}{TimeStamp:yyyy-MM-ddTHH:mm:ss.fffffffzzz}{IpfsCid}{PreviousHash}{authKey}{sig}{DataHash}";
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
                 return Convert.ToBase64String(bytes); 
             }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesticide Application</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="forms.css">
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Pesticide Application Record</h1>
+        </div>
+        
+        <form id="pesticideForm">
+            <div class="form-section">
+                <div class="form-section-header">Crop Information</div>
+                
+                <div class="form-group">
+                    <label for="cropCode" class="required">Crop Code</label>
+                    <input type="number" id="cropCode" name="cropCode" required placeholder="Enter crop code">
+                    <div class="help-text">Enter the code of the crop being treated</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-header">Pesticide Details</div>
+                
+                <div class="form-group">
+                    <label for="pesticideName" class="required">Pesticide Name</label>
+                    <input type="text" id="pesticideName" name="pesticideName" required placeholder="Enter pesticide name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantity" class="required">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" required placeholder="Enter quantity">
+                    <div class="help-text">Enter the amount of pesticide used</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description" class="required">Description</label>
+                    <textarea id="description" name="description" required placeholder="Enter details about the pesticide application"></textarea>
+                </div>
+            </div>
+            
+            <div class="success-message">Pesticide application recorded successfully!</div>
+            <button type="submit" class="btn-primary">Record Application</button>
+        </form>
+    </div>
+    <script src="pesticide.js"></script>
+</body>
+</html> 

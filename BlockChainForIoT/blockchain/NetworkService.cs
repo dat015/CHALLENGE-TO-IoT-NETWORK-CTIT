@@ -17,9 +17,10 @@ namespace BlockChainForIoT.blockchain
 
         public NetworkService(List<string> authorityPublicKeys, string nodeAddress, List<string> peerNodes, HttpClient httpClient)
         {
+            string peer_node_json = Environment.GetEnvironmentVariable("PEER_NODES");
             _authorityPublicKeys = authorityPublicKeys;
             _nodeAddress = nodeAddress;
-            _peerNodes = peerNodes ?? new List<string>();
+            _peerNodes = JsonSerializer.Deserialize<List<string>>(peer_node_json);
             _httpClient = httpClient;
         }
 
@@ -34,7 +35,7 @@ namespace BlockChainForIoT.blockchain
                     {
                         string json = await response.Content.ReadAsStringAsync();
                         var peerChain = JsonSerializer.Deserialize<List<block>>(json);
-                        if (peerChain.Count > chain.Count && new AuthorityManager(null,null).IsChainValid(peerChain))
+                        if (peerChain.Count > chain.Count && new AuthorityManager(null, null).IsChainValid(peerChain))
                         {
                             chain.Clear();
                             chain.AddRange(peerChain);
@@ -49,19 +50,35 @@ namespace BlockChainForIoT.blockchain
             }
         }
 
-        public async Task BroadcastBlockAsync(block newBlock)
+        public async Task<bool> BroadcastBlockAsync(block newBlock)
         {
+            int totalPeers = _peerNodes.Count;
+            int okCount = 0;
+
             foreach (var peer in _peerNodes)
             {
                 try
                 {
-                    await _httpClient.PostAsJsonAsync($"{peer}/api/blockchain/add-block", newBlock);
+                    var response = await _httpClient.PostAsJsonAsync($"{peer}/api/blockchain/add-block", newBlock);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        okCount++;
+                        Console.WriteLine($"Peer {peer} accepted block.");
+                    }
+                    else
+                    {
+                        string reason = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine($"Peer {peer} rejected block: {reason}");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to broadcast block to {peer}: {ex.Message}");
+                    Console.WriteLine($"Failed to broadcast to {peer}: {ex.Message}");
                 }
             }
+
+            Console.WriteLine($"Accepted by {okCount}/{totalPeers} peers.");
+            return okCount == totalPeers && totalPeers > 0;
         }
     }
-}   
+}

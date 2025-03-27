@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý cây trồng - Plant Monitoring IoT</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="forms.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .menu-item {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-item h2 {
+            color: #2c3e50;
+            margin: 0 0 15px 0;
+            font-size: 20px;
+        }
+
+        .menu-item p {
+            color: #7f8c8d;
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .menu-item .icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #3498db;
+        }
+
+        /* Form container styles */
+        .form-container {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .back-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 15px;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Quản lý cây trồng</h1>
+            <p>Chọn chức năng dưới đây để quản lý thông tin cây trồng</p>
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-item" data-page="crop-origin">
+                <div class="icon">🌱</div>
+                <h2>Đăng ký cây trồng</h2>
+                <p>Đăng ký và quản lý thông tin về nguồn gốc cây trồng, bao gồm vị trí, thông tin nông dân và thông tin cảm biến.</p>
+            </div>
+
+            <div class="menu-item" data-page="pesticide">
+                <div class="icon">🧪</div>
+                <h2>Quản lý thuốc trừ sâu</h2>
+                <p>Ghi chép và theo dõi việc phun thuốc trừ sâu, bao gồm loại thuốc, số lượng và chi tiết ứng dụng cho cây trồng.</p>
+            </div>
+
+            <div class="menu-item" data-page="fertilizer">
+                <div class="icon">🌿</div>
+                <h2>Quản lý phân bón</h2>
+                <p>Quản lý việc bón phân, theo dõi sử dụng và duy trì hồ sơ lịch bón phân cho cây trồng.</p>
+            </div>
+        </div>
+
+        <!-- Form Containers -->
+        <div id="crop-origin-form" class="form-container">
+            <button class="back-button">← Quay lại</button>
+            <div id="crop-origin-content"></div>
+        </div>
+
+        <div id="pesticide-form" class="form-container">
+            <button class="back-button">← Quay lại</button>
+            <div id="pesticide-content"></div>
+        </div>
+
+        <div id="fertilizer-form" class="form-container">
+            <button class="back-button">← Quay lại</button>
+            <div id="fertilizer-content"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            const formContainers = document.querySelectorAll('.form-container');
+            const menuGrid = document.querySelector('.menu-grid');
+            const backButtons = document.querySelectorAll('.back-button');
+            
+            // Function to load form content
+            async function loadFormContent(page) {
+                try {
+                    const response = await fetch(`${page}.html`);
+                    const html = await response.text();
+                    const contentDiv = document.getElementById(`${page}-content`);
+                    contentDiv.innerHTML = html;
+                    
+                    // Load associated JavaScript file
+                    const script = document.createElement('script');
+                    script.src = `${page}.js`;
+                    document.body.appendChild(script);
+                } catch (error) {
+                    console.error('Error loading form:', error);
+                }
+            }
+
+            // Function to show form and hide menu
+            async function showForm(formId) {
+                menuGrid.style.display = 'none';
+                formContainers.forEach(container => {
+                    container.classList.remove('active');
+                });
+                const formContainer = document.getElementById(formId);
+                formContainer.classList.add('active');
+                
+                // Load form content
+                const page = formId.replace('-form', '');
+                await loadFormContent(page);
+            }
+
+            // Function to show menu and hide form
+            function showMenu() {
+                menuGrid.style.display = 'grid';
+                formContainers.forEach(container => {
+                    container.classList.remove('active');
+                });
+            }
+            
+            // Handle menu item clicks
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    showForm(`${page}-form`);
+                });
+            });
+
+            // Handle back button clicks
+            backButtons.forEach(button => {
+                button.addEventListener('click', showMenu);
+            });
+        });
+    </script>
+</body>
+</html> 

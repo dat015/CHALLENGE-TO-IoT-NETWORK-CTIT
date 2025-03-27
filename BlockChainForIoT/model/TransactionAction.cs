@@ -11,7 +11,7 @@ namespace BlockChainForIoT.model
     public class TransactionAction : ITransaction
     {
         
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
         public string Action { get; set; }
         public string Receiver { get; set; } //app web (IP)
         public int Sender { get; set; } // sensor

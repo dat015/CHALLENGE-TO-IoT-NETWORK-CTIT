@@ -15,7 +15,7 @@ namespace BlockChainForIoT.blockchain
 
         private readonly IpfsService _ipfsService;
         private readonly NetworkService _networkService;
-        private readonly AuthorityManager _authorityManager;
+        public readonly AuthorityManager _authorityManager;
         private readonly TransactionManager _transactionManager;
         private readonly DataQuery _dataQuery;
 
@@ -42,10 +42,9 @@ namespace BlockChainForIoT.blockchain
                 _dataQuery = new DataQuery(_ipfsService, Chain);
 
                 Console.WriteLine("Blockchain initialized.");
-                InitializeChain();
-
+                InitializeChainAsync().GetAwaiter().GetResult(); // Chạy đồng bộ để đảm bảo hoàn tất
                 Console.WriteLine("Starting peer sync...");
-                Task.Run(() => _networkService.SyncWithPeersAsync(Chain));
+                // Task.Run(() => _networkService.SyncWithPeersAsync(Chain));
             }
             catch (Exception ex)
             {
@@ -54,34 +53,54 @@ namespace BlockChainForIoT.blockchain
                 throw; // Ném lại để debug dễ hơn
             }
         }
-        public void ClearChain()
+
+        private async Task InitializeChainAsync()
         {
             Chain.Clear();
-            Console.WriteLine("Chain cleared.");
-        }
-        private void InitializeChain()
-        {
-
-            _ipfsService.LoadMetadataCid();
+            var latestCids = await _ipfsService.GetLatestCidsFromPinata();
             MetadataCid = _ipfsService.MetadataCid;
             LatestIpfsCid = _ipfsService.LatestIpfsCid;
             Console.WriteLine($"Loaded from file: MetadataCid={MetadataCid}, LatestIpfsCid={LatestIpfsCid}");
 
-            if (!string.IsNullOrEmpty(MetadataCid))
+            try
             {
-                _ipfsService.RestoreDictionariesFromIpfs().GetAwaiter().GetResult();
+                // Thử khôi phục từ Pinata nếu có CID
+                if (!string.IsNullOrEmpty(MetadataCid))
+                {
+                    await _ipfsService.RestoreDictionariesFromIpfs();
+                }
+                if (!string.IsNullOrEmpty(LatestIpfsCid))
+                {
+                    await _ipfsService.RestoreChainFromIpfs(Chain);
+                    Console.WriteLine($"Restored chain from IPFS with length={Chain.Count}, Last Hash={Chain.Last().Hash}");
+                }
+                else
+                {
+                    // Nếu không có CID hoặc khôi phục thất bại, tạo genesis block
+                    Console.WriteLine("No valid chain found. Creating genesis block...");
+                    if (Chain.Count == 0)
+                    {
+                        _authorityManager.AddGenesisBlock(Chain);
+                        LatestIpfsCid = await _ipfsService.PublishToIpfsAsync(Chain);
+                        await _ipfsService.UpdateMetadataOnIpfs(); // Cập nhật metadata mặc định
+                        MetadataCid = _ipfsService.MetadataCid;
+                    }
+                }
             }
-            if (!string.IsNullOrEmpty(LatestIpfsCid))
+            catch (Exception ex)
             {
-                _ipfsService.RestoreChainFromIpfs(Chain).GetAwaiter().GetResult();
-            }
-            else
-            {
+                Console.WriteLine($"Error during initialization: {ex.Message}. Resetting chain...");
+                Chain.Clear();
                 _authorityManager.AddGenesisBlock(Chain);
+                LatestIpfsCid = await _ipfsService.PublishToIpfsAsync(Chain);
+                await _ipfsService.UpdateMetadataOnIpfs();
+                MetadataCid = _ipfsService.MetadataCid;
             }
+
+            await _networkService.SyncWithPeersAsync(Chain);
+            Console.WriteLine($"Chain ready with CID={LatestIpfsCid}, Metadata CID={MetadataCid}");
         }
 
-        
         public async Task AddAuthorityNodeAsync(string publicKey)
         {
             await _authorityManager.AddAuthorityNodeAsync(publicKey, _networkService.PeerNodes);

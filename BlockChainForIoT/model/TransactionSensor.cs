@@ -12,7 +12,7 @@ namespace BlockChainForIoT.model
     public class TransactionSensor : ITransaction
     {
        
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
         public double Humidity { get; set; }
         public double Temperature { get; set; }
         public double SoilMoisture { get; set; }

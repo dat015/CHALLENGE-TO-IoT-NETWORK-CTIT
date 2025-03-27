@@ -96,7 +96,7 @@ namespace BlockChainForIoT.blockchain
                     var transaction = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(jsonData);
                     DateTime timestamp = DateTime.Parse(transaction["Timestamp"].GetString());
 
-                    if (transaction["ActionId"].GetInt32() == actionId &&
+                    if (transaction["Sender"].GetInt32() == actionId &&
                         (startDate == null || timestamp >= startDate) &&
                         (endDate == null || timestamp <= endDate))
                     {

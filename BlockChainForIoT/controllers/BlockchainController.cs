@@ -22,19 +22,18 @@ namespace BlockChainForIoT.controllers
             _context = context;
         }
 
-        [HttpPost("add")]
-        public async Task<IActionResult> AddBlock([FromBody] ITransaction data)
+        [HttpPost("add-block")]
+        public async Task<IActionResult> AddBlock([FromBody] block newBlock)
         {
-            try
+            if (_blockchain.Chain.Any(b => b.Hash == newBlock.Hash))
+                return Ok("Block already exists");
+
+            if (_blockchain._authorityManager.IsChainValid(_blockchain.Chain.Concat(new[] { newBlock }).ToList()))
             {
-                await _blockchain.AddBlock(data);
-                var latestBlock = _blockchain.GetLatestBlock();
-                return Ok(new { Message = "Block added", BlockIndex = latestBlock.Index, IpfsCid = latestBlock.IpfsCid });
+                _blockchain.Chain.Add(newBlock);
+                return Ok();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Message = "Error adding block", Error = ex.Message });
-            }
+            return BadRequest("Invalid block");
         }
 
         [HttpPost("add_trans_sensor")]
