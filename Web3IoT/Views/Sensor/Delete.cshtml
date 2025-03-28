@@ -1,0 +1,75 @@
+@* @model Web3IoT.Models.Sensor
+
+@{
+    ViewData["Title"] = "Xóa cảm biến";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-trash me-1"></i>
+            Xác nhận xóa cảm biến
+        </div>
+        <div class="card-body">
+            <h3>Bạn có chắc chắn muốn xóa cảm biến này?</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Name)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Farm)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Farm.Name)</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Số lượng cây trồng</dt>
+                        <dd class="col-sm-8">@Model.Crops.Count</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h4>Danh sách cây trồng đang được theo dõi</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Mã cây trồng</th>
+                                    <th>Tên cây trồng</th>
+                                    <th>Loại cây</th>
+                                    <th>Giống cây</th>
+                                    <th>Vị trí</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var crop in Model.Crops)
+                                {
+                                    <tr>
+                                        <td>@crop.CropCode</td>
+                                        <td>@crop.Name</td>
+                                        <td>@crop.Type</td>
+                                        <td>@crop.Variety</td>
+                                        <td>@crop.Location</td>
+                                        <td>@crop.Status</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <input type="submit" value="Xóa" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </form>
+        </div>
+    </div>
+</div>  *@

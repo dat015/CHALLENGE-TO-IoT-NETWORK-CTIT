@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     requestAnimationFrame(() => initializeDashboard());
                 } else if (file === 'control.html') {
                     requestAnimationFrame(() => initializeControl());
+                } else if (file === 'dashboard-section.html') {
+                    requestAnimationFrame(() => initializeDashboardSection());
                 }
             })
             .catch(error => {
@@ -333,6 +335,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('sleepStatus').textContent = 'Chưa kết nối tới MQTT broker';
             }
         };
-        
+    }
+
+    // Khởi tạo trang Dashboard Section (Quản lý cây trồng)
+    function initializeDashboardSection() {
+        const menuItems = document.querySelectorAll('.menu-item');
+        const modals = document.querySelectorAll('.modal');
+        const closeButtons = document.querySelectorAll('.close-button');
+
+        // Hiển thị modal khi click vào menu-item
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const modalId = this.getAttribute('data-modal');
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.add('active');
+                } else {
+                    console.error(`Modal với ID ${modalId} không được tìm thấy`);
+                }
+            });
+        });
+
+        // Đóng modal khi click nút "Đóng"
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                modal.classList.remove('active');
+            });
+        });
+
+        // Đóng modal khi click bên ngoài modal-content
+        modals.forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
     }
 });

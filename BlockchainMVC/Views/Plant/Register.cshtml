@@ -1,0 +1,99 @@
+@{
+    ViewData["Title"] = "Đăng Ký Cây Trồng";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white text-center">
+                    <h4 class="mb-0">Đăng Ký Cây Trồng Mới</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Register" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tên sản phẩm</label>
+                                    <input type="text" class="form-control" name="Name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Loại cây</label>
+                                    <select class="form-select" name="PlantType" required>
+                                        <option value="">Chọn loại cây</option>
+                                        <option value="Rau">Rau</option>
+                                        <option value="Cây ăn quả">Cây ăn quả</option>
+                                        <option value="Cây công nghiệp">Cây công nghiệp</option>
+                                        <option value="Cây lương thực">Cây lương thực</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Ngày trồng</label>
+                                    <input type="date" class="form-control" name="PlantingDate" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Địa điểm trồng</label>
+                                    <input type="text" class="form-control" name="Location" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Phương pháp canh tác</label>
+                                    <select class="form-select" name="CultivationMethod" required>
+                                        <option value="">Chọn phương pháp</option>
+                                        <option value="Hữu cơ">Hữu cơ</option>
+                                        <option value="Thông thường">Thông thường</option>
+                                        <option value="Thủy canh">Thủy canh</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Diện tích (m²)</label>
+                                    <input type="number" class="form-control" name="Area" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Số lượng cây</label>
+                                    <input type="number" class="form-control" name="Quantity" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Hình ảnh cây trồng</label>
+                                    <input type="file" class="form-control" name="Image" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Ghi chú</label>
+                                    <textarea class="form-control" name="Notes" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save me-2"></i>Đăng Ký
+                            </button>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary btn-lg ms-2">
+                                <i class="fas fa-times me-2"></i>Hủy
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Validate form trước khi submit
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const plantingDate = new Date(document.querySelector('input[name="PlantingDate"]').value);
+            const today = new Date();
+            
+            if (plantingDate > today) {
+                e.preventDefault();
+                alert('Ngày trồng không thể lớn hơn ngày hiện tại!');
+            }
+        });
+    </script>
+} 

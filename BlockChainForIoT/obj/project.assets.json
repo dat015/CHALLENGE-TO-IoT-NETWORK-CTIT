@@ -9573,11 +9573,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Thao\\source\\BlockChainForIoT\\BlockChainForIoT.csproj",
+      "projectUniqueName": "C:\\Users\\Thao\\source\\IoT\\BlockChainForIoT\\BlockChainForIoT.csproj",
       "projectName": "BlockChainForIoT",
-      "projectPath": "C:\\Users\\Thao\\source\\BlockChainForIoT\\BlockChainForIoT.csproj",
+      "projectPath": "C:\\Users\\Thao\\source\\IoT\\BlockChainForIoT\\BlockChainForIoT.csproj",
       "packagesPath": "C:\\Users\\Thao\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Thao\\source\\BlockChainForIoT\\obj\\",
+      "outputPath": "C:\\Users\\Thao\\source\\IoT\\BlockChainForIoT\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Thao\\AppData\\Roaming\\NuGet\\NuGet.Config"

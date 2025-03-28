@@ -1,0 +1,47 @@
+@model Web3IoT.Models.Crop
+
+@{
+    ViewData["Title"] = "Chi tiết cây trồng";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-info-circle me-1"></i>
+            Chi tiết cây trồng
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Name)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+
+                        
+
+                    
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Location)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Location)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.DatePlanted)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.DatePlanted)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.DateHarvested)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.DateHarvested)</dd>
+                    </dl>
+                </div>
+               
+            </div>
+
+            <div class="form-group mt-3">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Sửa</a>
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div> 

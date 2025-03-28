@@ -1,0 +1,391 @@
+@model List<Web3IoT.Models.CropTrace>
+
+@{
+    ViewData["Title"] = "Truy xuất nguồn gốc";
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h1 class="mt-4 mb-4">@ViewData["Title"]</h1>
+        <p class="text-muted">Tra cứu thông tin chi tiết về nguồn gốc và quá trình canh tác cây trồng</p>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-search me-1"></i>
+            Tìm kiếm mã cây trồng
+        </div>
+        <div class="card-body">
+            <form asp-action="GetTrace" method="get" class="search-form">
+                <div class="row align-items-end">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="code" class="form-label">Mã cây trồng:</label>
+                            <div class="input-group">
+                                <input type="text" name="code" id="code" class="form-control form-control-lg"
+                                    value="@ViewBag.Code" required placeholder="Nhập mã cây trồng" />
+                                <button type="button" class="btn btn-outline-primary btn-lg" data-bs-toggle="modal"
+                                    data-bs-target="#scanQRModal">
+                                    <i class="fas fa-qrcode"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-search me-2"></i>Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (ViewBag.Traces != null && ViewBag.Traces.Count > 0)
+    {
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <i class="fas fa-table me-1"></i>
+                Kết quả truy xuất nguồn gốc
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    @foreach (var trace in ViewBag.Traces)
+                    {
+                        <div class="timeline-item">
+                            <div class="timeline-date">
+                                <i class="fas fa-calendar-alt me-2"></i>
+                                @trace.Timestamp.ToString("dd/MM/yyyy HH:mm")
+                            </div>
+                            <div class="timeline-content">
+                                @switch (trace.Type)
+                                {
+                                    case "Origin":
+                                        <div class="card bg-light border-start border-primary border-4">
+                                            <div class="card-body">
+                                                <h5 class="card-title text-primary">
+                                                    <i class="fas fa-seedling me-2"></i>Thông tin xuất xứ
+                                                </h5>
+                                                <p class="card-text">
+                                                    <strong>Tên cây trồng:</strong> @trace.CropName<br />
+                                                    <strong>Vị trí:</strong> @trace.Location<br />
+                                                    <strong>Nông dân:</strong> @trace.FarmerName<br />
+                                                    <strong>Mô tả:</strong> @trace.Description<br />
+                                                    <strong>ID cảm biến:</strong> @trace.SensorId
+                                                </p>
+                                            </div>
+                                        </div>
+                                        break;
+
+                                    case "Spraying":
+                                        <div class="card bg-light border-start border-warning border-4">
+                                            <div class="card-body">
+                                                <h5 class="card-title text-warning">
+                                                    <i class="fas fa-spray-can me-2"></i>Thông tin phun thuốc
+                                                </h5>
+                                                <p class="card-text">
+                                                    <strong>Tên thuốc:</strong> @trace.PesticideName<br />
+                                                    <strong>Số lượng:</strong> @trace.Quantity<br />
+                                                    <strong>Mô tả:</strong> @trace.Description
+                                                </p>
+                                            </div>
+                                        </div>
+                                        break;
+
+                                    case "Fertilizing":
+                                        <div class="card bg-light border-start border-info border-4">
+                                            <div class="card-body">
+                                                <h5 class="card-title text-info">
+                                                    <i class="fas fa-leaf me-2"></i>Thông tin bón phân
+                                                </h5>
+                                                <p class="card-text">
+                                                    <strong>Tên phân:</strong> @trace.FertilizerName<br />
+                                                    <strong>Số lượng:</strong> @trace.Quantity<br />
+                                                    <strong>Mô tả:</strong> @trace.Description
+                                                </p>
+                                            </div>
+                                        </div>
+                                        break;
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- QR Scanner Modal -->
+<div class="modal fade" id="scanQRModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-qrcode me-2"></i>Quét mã QR
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="reader" class="qr-scanner"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 2rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header h1 {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .card {
+        border: none;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .card-header {
+        border-bottom: none;
+        padding: 1rem 1.5rem;
+    }
+
+    .form-control {
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .btn {
+        border-radius: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+        transform: translateY(-1px);
+    }
+
+    .timeline {
+        position: relative;
+        padding: 2rem 0;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-left: 3rem;
+        margin-bottom: 2rem;
+    }
+
+    .timeline-item:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        background: #fff;
+        border: 3px solid #007bff;
+        z-index: 1;
+    }
+
+    .timeline-item:after {
+        content: '';
+        position: absolute;
+        left: 0.75rem;
+        top: 1.5rem;
+        bottom: -2rem;
+        width: 2px;
+        background: #e9ecef;
+    }
+
+    .timeline-item:last-child:after {
+        display: none;
+    }
+
+    .timeline-date {
+        font-weight: 600;
+        color: #6c757d;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .timeline-content {
+        background: #fff;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .timeline-content .card {
+        margin: 0;
+        border-radius: 0.5rem;
+    }
+
+    .timeline-content .card-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .timeline-content .card-text {
+        color: #495057;
+        line-height: 1.6;
+    }
+
+    .timeline-content .card-text strong {
+        color: #2c3e50;
+    }
+
+    .qr-scanner {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #reader__scan_region {
+        background: #f8f9fa;
+    }
+
+    #reader__scan_region img {
+        display: none;
+    }
+
+    #reader__dashboard {
+        padding: 1rem;
+        background: #fff;
+    }
+
+    .modal-content {
+        border: none;
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .modal-header {
+        border-bottom: none;
+    }
+
+    .btn-close-white {
+        filter: brightness(0) invert(1);
+    }
+
+    @@media screen and (max-width: 768px) {
+        .page-header {
+            padding: 1.5rem;
+        }
+
+        .timeline-item {
+            padding-left: 2rem;
+        }
+
+        .timeline-item:before {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .timeline-item:after {
+            left: 0.625rem;
+        }
+
+        .timeline-date {
+            font-size: 1rem;
+        }
+
+        .timeline-content .card-title {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script>
+        function onScanSuccess(decodedText, decodedResult) {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+                html5QrcodeScanner = null;
+            }
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('scanQRModal'));
+            modal.hide();
+
+            let code = decodedText;
+            try {
+                const url = new URL(decodedText);
+                const urlParams = new URLSearchParams(url.search);
+                code = urlParams.get('code');
+                console.log("Extracted code from URL:", code);
+            } catch (e) {
+                console.log("Not a URL, using raw text:", decodedText);
+            }
+
+            if (!code || isNaN(code)) {
+                console.error("Invalid code:", code);
+                alert("Mã QR không hợp lệ!");
+                return;
+            }
+
+            const codeInput = document.getElementById('code');
+            codeInput.value = code;
+            document.querySelector('form.search-form').submit();
+        }
+
+        function onScanFailure(error) {
+            console.warn(`QR scan failed: ${error}`);
+        }
+
+        let html5QrcodeScanner = null;
+
+        // Khởi tạo scanner khi modal được mở
+        document.getElementById('scanQRModal').addEventListener('shown.bs.modal', function () {
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader",
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 },
+                },
+                false
+            );
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        });
+
+        // Dừng scanner khi modal được đóng
+        document.getElementById('scanQRModal').addEventListener('hidden.bs.modal', function () {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+                html5QrcodeScanner = null;
+            }
+        });
+    </script>
+}

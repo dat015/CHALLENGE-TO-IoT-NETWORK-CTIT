@@ -1,0 +1,53 @@
+@model BlockchainMVC.Models.Crop
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="text-primary">Details</h2>
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Name)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.SensorId)</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Sensor != null)
+                            {
+                                @($"{Model.Sensor.Name} ({Model.Sensor.SensorCode})")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Không có cảm biến</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.DatePlanted)</dt>
+                        <dd class="col-sm-8">@(Model.DatePlanted?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa trồng")</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.DateHarvested)</dt>
+                        <dd class="col-sm-8">@(Model.DateHarvested?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa thu hoạch")</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,167 @@
+@{
+    ViewData["Title"] = "Quét mã QR";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-qrcode me-1"></i>
+            Quét mã QR để xem thông tin cây trồng
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="qrInput" class="form-label">Nhập mã QR hoặc quét mã</label>
+                        <input type="text" class="form-control" id="qrInput" placeholder="Nhập mã QR hoặc quét mã">
+                    </div>
+                    <button id="scanButton" class="btn btn-primary">
+                        <i class="fas fa-camera"></i> Quét mã QR
+                    </button>
+                    <button id="submitButton" class="btn btn-success">
+                        <i class="fas fa-search"></i> Tìm kiếm
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <div id="reader"></div>
+                </div>
+            </div>
+
+            <div id="result" class="mt-4" style="display: none;">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Đang xử lý mã QR...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script>
+        function onScanSuccess(decodedText, decodedResult) {
+            // Dừng quét sau khi tìm thấy mã QR
+            html5QrCode.stop().then(() => {
+                // Hiển thị kết quả
+                document.getElementById('qrInput').value = decodedText;
+                document.getElementById('result').style.display = 'block';
+                
+                // Gửi mã QR lên server
+                fetch('/Trace/Scan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `qrCode=${encodeURIComponent(decodedText)}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Chuyển hướng đến trang chi tiết
+                        window.location.href = `/Trace/GetTrace?code=${data.code}`;
+                    } else {
+                        document.getElementById('result').innerHTML = `
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-circle"></i> ${data.message}
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i> Lỗi khi xử lý mã QR
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function onScanFailure(error) {
+            // Xử lý lỗi quét
+            console.warn(`Code scan error = ${error}`);
+        }
+
+        let html5QrCode = new Html5Qrcode("reader");
+
+        // Khởi tạo camera khi trang được tải
+        document.addEventListener('DOMContentLoaded', function() {
+            html5QrCode.start(
+                { facingMode: "environment" },
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 },
+                },
+                onScanSuccess,
+                onScanFailure
+            ).catch((err) => {
+                console.error(`Error starting camera: ${err}`);
+            });
+        });
+
+        // Xử lý sự kiện click nút quét
+        document.getElementById('scanButton').addEventListener('click', function() {
+            html5QrCode.start(
+                { facingMode: "environment" },
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 },
+                },
+                onScanSuccess,
+                onScanFailure
+            ).catch((err) => {
+                console.error(`Error starting camera: ${err}`);
+            });
+        });
+
+        // Xử lý sự kiện click nút tìm kiếm
+        document.getElementById('submitButton').addEventListener('click', function() {
+            const qrCode = document.getElementById('qrInput').value;
+            if (!qrCode) {
+                document.getElementById('result').innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i> Vui lòng nhập mã QR
+                    </div>
+                `;
+                document.getElementById('result').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').innerHTML = `
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Đang xử lý mã QR...
+                </div>
+            `;
+
+            fetch('/Trace/Scan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `qrCode=${encodeURIComponent(qrCode)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = `/Trace/GetTrace?code=${data.code}`;
+                } else {
+                    document.getElementById('result').innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i> ${data.message}
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i> Lỗi khi xử lý mã QR
+                    </div>
+                `;
+            });
+        });
+    </script>
+} 

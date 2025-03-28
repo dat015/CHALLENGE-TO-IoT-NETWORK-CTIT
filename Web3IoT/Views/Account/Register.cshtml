@@ -1,0 +1,130 @@
+@model Web3IoT.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Đăng ký";
+    Layout = "_LoginLayout";
+}
+
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100 py-5">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="logo-container">
+                            <img src="~/images/logo.png" alt="Logo">
+                        </div>
+                        <h4 class="mb-2">Đăng ký tài khoản</h4>
+                        <p class="text-muted mb-4">Tạo tài khoản mới để quản lý nông trại của bạn</p>
+                    </div>
+
+                    <form asp-action="Register" asp-controller="Account" method="post">
+                        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label asp-for="FirstName" class="form-label">Họ</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-user text-success"></i>
+                                    </span>
+                                    <input asp-for="FirstName" class="form-control" placeholder="Nhập họ của bạn" />
+                                </div>
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label asp-for="LastName" class="form-label">Tên</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-user text-success"></i>
+                                    </span>
+                                    <input asp-for="LastName" class="form-control" placeholder="Nhập tên của bạn" />
+                                </div>
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-envelope text-success"></i>
+                                </span>
+                                <input asp-for="Email" class="form-control" placeholder="Nhập email của bạn" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="PhoneNumber" class="form-label">Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-phone text-success"></i>
+                                </span>
+                                <input asp-for="PhoneNumber" class="form-control" placeholder="Nhập số điện thoại của bạn" />
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Address" class="form-label">Địa chỉ</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-map-marker-alt text-success"></i>
+                                </span>
+                                <input asp-for="Address" class="form-control" placeholder="Nhập địa chỉ của bạn" />
+                            </div>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label">Mật khẩu</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-lock text-success"></i>
+                                </span>
+                                <input asp-for="Password" class="form-control" placeholder="Nhập mật khẩu của bạn" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label">Xác nhận mật khẩu</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-lock text-success"></i>
+                                </span>
+                                <input asp-for="ConfirmPassword" class="form-control" placeholder="Nhập lại mật khẩu của bạn" />
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input asp-for="TermsAccepted" class="form-check-input" />
+                                <label asp-for="TermsAccepted" class="form-check-label">
+                                    Tôi đồng ý với <a href="#" class="text-success">điều khoản sử dụng</a>
+                                </label>
+                            </div>
+                            <span asp-validation-for="TermsAccepted" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 mb-4">
+                            <i class="fas fa-user-plus me-2"></i>Đăng ký
+                        </button>
+
+                        <div class="text-center">
+                            <p class="mb-0">Đã có tài khoản? 
+                                <a href="/Account/Login" class="text-success">Đăng nhập</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

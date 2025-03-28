@@ -1,0 +1,67 @@
+@model Web3IoT.Models.Sensor
+
+@{
+    ViewData["Title"] = "Chi tiết cảm biến";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-info-circle me-1"></i>
+            Chi tiết cảm biến
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Name)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Farm)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Farm.Name)</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Số lượng cây trồng</dt>
+                        <dd class="col-sm-8">@Model.Crops.Count</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h4>Danh sách cây trồng được theo dõi</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Mã cây trồng</th>
+                                    <th>Tên cây trồng</th>
+                                    <th>Vị trí</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var crop in Model.Crops)
+                                {
+                                    <tr>
+                                        <td>@crop.Id</td>
+                                        <td>@crop.Name</td>
+                                        <td>@crop.Location</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-3">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Sửa</a>
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div> 

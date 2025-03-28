@@ -1,0 +1,93 @@
+@model IEnumerable<Web3IoT.Models.Crop>
+
+@{
+    ViewData["Title"] = "Danh sách cây trồng";
+}
+<style>
+    /* Tùy chỉnh nút tải xuống */
+    .download-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #fff;
+        background-color: #6c757d; /* Màu xám của btn-secondary */
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .download-btn i {
+        margin-right: 5px; /* Khoảng cách giữa icon và chữ */
+    }
+
+    .download-btn:hover {
+        background-color: #5a6268; /* Màu tối hơn khi hover */
+        transform: translateY(-2px); /* Hiệu ứng nâng nhẹ */
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .download-btn:active {
+        transform: translateY(0); /* Trở lại vị trí ban đầu khi nhấn */
+    }
+</style>
+<div class="container-fluid">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Thêm mới</a>
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Danh sách cây trồng
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Name)</th>
+                        <th>@Html.DisplayNameFor(model => model.Location)</th>
+                        <th>@Html.DisplayNameFor(model => model.DatePlanted)</th>
+                        <th>Mã QR</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                                <td>@Html.DisplayFor(modelItem => item.DatePlanted)</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.QRCode))
+                                    {
+                                        <img src="data:image/png;base64,@item.QRCode" alt="QR Code" style="width: 100px; height: 100px;" />
+                                        <br />
+                                        <a href="data:image/png;base64,@item.QRCode" download="@($"QRCode_{item.Name}.png")" class="download-btn mt-1">
+                                            <i class="fas fa-download"></i> Tải xuống
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa có mã QR</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Chi tiết</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,151 @@
+@model Web3IoT.Models.Crop
+
+@{
+    ViewData["Title"] = "Thêm mới cây trồng";
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h1 class="mt-4 mb-4">@ViewData["Title"]</h1>
+        <p class="text-muted">Thêm thông tin mới về cây trồng vào hệ thống</p>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-plus-circle me-1"></i>
+            Thông tin cây trồng
+        </div>
+        <div class="card-body">
+            <form asp-controller="Crop" asp-action="CreateCrop" method="post">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Name" class="form-label">Tên cây trồng</label>
+                            <input asp-for="Name" class="form-control" required />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Location" class="form-label">Vị trí</label>
+                            <input asp-for="Location" class="form-control" required />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="SensorId" class="form-label">ID Cảm biến</label>
+                            <select asp-for="SensorId" class="form-control" required>
+                                <option value="">-- Chọn cảm biến --</option>
+                                @foreach (var sensor in ViewData["Sensors"] as List<Web3IoT.Models.Sensor> ?? new
+                                                                List<Web3IoT.Models.Sensor>())
+                                {
+                                    <option value="@sensor.Id">@sensor.Name</option>
+                                }
+                            </select>
+                            <span asp-validation-for="SensorId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Lưu
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Quay lại
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 2rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header h1 {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .card {
+        border: none;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .card-header {
+        border-bottom: none;
+        padding: 1rem 1.5rem;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .btn {
+        border-radius: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+        transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+        background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
+        border: none;
+    }
+
+    .btn-secondary:hover {
+        background: linear-gradient(135deg, #545b62 0%, #3f4448 100%);
+        transform: translateY(-1px);
+    }
+
+    @@media screen and (max-width: 768px) {
+        .page-header {
+            padding: 1.5rem;
+        }
+
+        .btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

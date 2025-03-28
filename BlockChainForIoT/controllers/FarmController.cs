@@ -23,7 +23,8 @@ namespace BlockChainForIoT.controllers
         {
             _context.Crops.Add(crop);
             await _context.SaveChangesAsync();
-            return Ok(new { Message = "Crop added", Crop = crop });
+
+            return Ok(new { Message = "Crop added", CropCode = crop.Id });
         }
 
         [HttpPost("add_new_sensor")]
@@ -36,7 +37,7 @@ namespace BlockChainForIoT.controllers
             };
             _context.Sensors.Add(newSensor);
             await _context.SaveChangesAsync();
-            return Ok(new { Message = "Sensor added", Sensor = sensor });
+            return Ok(new { Message = "Sensor added", SensorCode = sensor.sensorCode });
         }
         
     }

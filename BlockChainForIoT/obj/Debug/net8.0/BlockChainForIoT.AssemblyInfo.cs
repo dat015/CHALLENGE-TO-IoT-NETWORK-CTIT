@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BlockChainForIoT")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a4804884d083625aadd68f5213390d82e9bf03af")]
 [assembly: System.Reflection.AssemblyProductAttribute("BlockChainForIoT")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BlockChainForIoT")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

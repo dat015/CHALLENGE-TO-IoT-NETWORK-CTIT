@@ -1,0 +1,154 @@
+<section id="dashboard" class="section">
+    <div class="container">
+        <h1>Dashboard</h1>
+        
+        <!-- Monitoring Data Cards -->
+        <div class="cards-grid">
+            <div class="card">
+                <h2>Nhiệt độ</h2>
+                <div class="value">25.5</div>
+                <div class="unit">°C</div>
+                <div class="status">Bình thường</div>
+            </div>
+            <div class="card">
+                <h2>Độ ẩm</h2>
+                <div class="value">65</div>
+                <div class="unit">%</div>
+                <div class="status">Bình thường</div>
+            </div>
+            <div class="card">
+                <h2>Độ ẩm đất</h2>
+                <div class="value">45</div>
+                <div class="unit">%</div>
+                <div class="status">Bình thường</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-container">
+            <div class="chart-wrapper">
+                <h3>Nhiệt độ theo thời gian</h3>
+                <canvas id="temperatureChart"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <h3>Độ ẩm theo thời gian</h3>
+                <canvas id="humidityChart"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <h3>Độ ẩm đất theo thời gian</h3>
+                <canvas id="soilMoistureChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="menu-grid">
+            <div class="menu-item" data-form="crop-origin">
+                <div class="icon">🌱</div>
+                <h2>Đăng ký cây trồng</h2>
+                <p>Thêm thông tin về cây trồng mới</p>
+            </div>
+            <div class="menu-item" data-form="pesticide">
+                <div class="icon">🧪</div>
+                <h2>Quản lý thuốc bảo vệ thực vật</h2>
+                <p>Ghi chép việc sử dụng thuốc bảo vệ thực vật</p>
+            </div>
+            <div class="menu-item" data-form="fertilizer">
+                <div class="icon">🌿</div>
+                <h2>Quản lý phân bón</h2>
+                <p>Ghi chép việc sử dụng phân bón</p>
+            </div>
+        </div>
+
+        <!-- Modals -->
+        <!-- Crop Origin Modal -->
+        <div id="crop-origin-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Đăng ký cây trồng</h2>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <form id="crop-origin-form" class="form-content">
+                    <div class="form-group">
+                        <label for="crop-name">Tên cây trồng:</label>
+                        <input type="text" id="crop-name" name="crop-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="planting-date">Ngày trồng:</label>
+                        <input type="date" id="planting-date" name="planting-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="crop-notes">Ghi chú:</label>
+                        <textarea id="crop-notes" name="crop-notes"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Đăng ký</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Pesticide Modal -->
+        <div id="pesticide-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Quản lý thuốc bảo vệ thực vật</h2>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <form id="pesticide-form" class="form-content">
+                    <div class="form-group">
+                        <label for="pesticide-name">Tên thuốc:</label>
+                        <input type="text" id="pesticide-name" name="pesticide-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="application-date">Ngày phun:</label>
+                        <input type="date" id="application-date" name="application-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Liều lượng:</label>
+                        <input type="number" id="amount" name="amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="crop-id">Cây trồng:</label>
+                        <input type="text" id="crop-id" name="crop-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pesticide-notes">Ghi chú:</label>
+                        <textarea id="pesticide-notes" name="pesticide-notes"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Lưu</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Fertilizer Modal -->
+        <div id="fertilizer-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Quản lý phân bón</h2>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <form id="fertilizer-form" class="form-content">
+                    <div class="form-group">
+                        <label for="fertilizer-name">Tên phân bón:</label>
+                        <input type="text" id="fertilizer-name" name="fertilizer-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fertilizer-date">Ngày bón:</label>
+                        <input type="date" id="fertilizer-date" name="fertilizer-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fertilizer-amount">Liều lượng:</label>
+                        <input type="number" id="fertilizer-amount" name="fertilizer-amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fertilizer-crop-id">Cây trồng:</label>
+                        <input type="text" id="fertilizer-crop-id" name="fertilizer-crop-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fertilizer-notes">Ghi chú:</label>
+                        <textarea id="fertilizer-notes" name="fertilizer-notes"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Lưu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section> 

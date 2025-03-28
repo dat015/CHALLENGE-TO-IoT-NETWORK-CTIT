@@ -1,0 +1,89 @@
+<section id="info" class="section">
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Quản lý cây trồng</h1>
+            <p>Chọn chức năng dưới đây để quản lý thông tin cây trồng</p>
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-item" data-modal="crop-origin-modal">
+                <div class="icon">🌱</div>
+                <h2>Đăng ký cây trồng</h2>
+                <p>Đăng ký và quản lý thông tin về nguồn gốc cây trồng, bao gồm vị trí, thông tin nông dân và thông tin cảm biến.</p>
+            </div>
+
+            <div class="menu-item" data-modal="pesticide-modal">
+                <div class="icon">🧪</div>
+                <h2>Quản lý thuốc trừ sâu</h2>
+                <p>Ghi chép và theo dõi việc phun thuốc trừ sâu, bao gồm loại thuốc, số lượng và chi tiết ứng dụng cho cây trồng.</p>
+            </div>
+
+            <div class="menu-item" data-modal="fertilizer-modal">
+                <div class="icon">🌿</div>
+                <h2>Quản lý phân bón</h2>
+                <p>Quản lý việc bón phân, theo dõi sử dụng và duy trì hồ sơ lịch bón phân cho cây trồng.</p>
+            </div>
+        </div>
+
+        <!-- Modal Containers -->
+        <div id="crop-origin-modal" class="modal">
+            <div class="modal-content">
+                <button class="close-button">Đóng</button>
+                <h2>Đăng ký cây trồng</h2>
+                <form>
+                    <label for="crop-name">Tên cây trồng:</label>
+                    <input type="text" id="crop-name" name="crop-name" required>
+
+                    <label for="location">Vị trí:</label>
+                    <input type="text" id="location" name="location" required>
+
+                    <label for="farmer-info">Thông tin nông dân:</label>
+                    <input type="text" id="farmer-info" name="farmer-info" required>
+
+                    <label for="sensor-info">Thông tin cảm biến:</label>
+                    <input type="text" id="sensor-info" name="sensor-info" required>
+
+                    <button type="submit">Đăng ký</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="pesticide-modal" class="modal">
+            <div class="modal-content">
+                <button class="close-button">Đóng</button>
+                <h2>Quản lý thuốc trừ sâu</h2>
+                <form>
+                    <label for="pesticide-type">Loại thuốc:</label>
+                    <input type="text" id="pesticide-type" name="pesticide-type" required>
+
+                    <label for="quantity">Số lượng:</label>
+                    <input type="number" id="quantity" name="quantity" required>
+
+                    <label for="application-details">Chi tiết ứng dụng:</label>
+                    <textarea id="application-details" name="application-details" required></textarea>
+
+                    <button type="submit">Lưu</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="fertilizer-modal" class="modal">
+            <div class="modal-content">
+                <button class="close-button">Đóng</button>
+                <h2>Quản lý phân bón</h2>
+                <form>
+                    <label for="fertilizer-type">Loại phân bón:</label>
+                    <input type="text" id="fertilizer-type" name="fertilizer-type" required>
+
+                    <label for="usage">Sử dụng:</label>
+                    <input type="text" id="usage" name="usage" required>
+
+                    <label for="schedule">Lịch bón phân:</label>
+                    <input type="date" id="schedule" name="schedule" required>
+
+                    <button type="submit">Lưu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

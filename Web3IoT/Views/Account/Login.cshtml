@@ -1,0 +1,71 @@
+@model Web3IoT.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "_LoginLayout";
+}
+
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="logo-container">
+                            <img src="~/images/logo.png" alt="Logo">
+                        </div>
+                        <h4 class="mb-2">Đăng nhập</h4>
+                        <p class="text-muted mb-4">Chào mừng bạn đến với hệ thống quản lý nông trại thông minh</p>
+                    </div>
+
+                    <form asp-action="Login" asp-controller="Account" method="post">
+                        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-envelope text-success"></i>
+                                </span>
+                                <input asp-for="Email" class="form-control" placeholder="Nhập email của bạn" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label">Mật khẩu</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-lock text-success"></i>
+                                </span>
+                                <input asp-for="Password" class="form-control" placeholder="Nhập mật khẩu của bạn" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input asp-for="RememberMe" class="form-check-input" />
+                                <label asp-for="RememberMe" class="form-check-label">Ghi nhớ đăng nhập</label>
+                            </div>
+                            <a href="#" class="text-success">Quên mật khẩu?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 mb-4">
+                            <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                        </button>
+
+                        <div class="text-center">
+                            <p class="mb-0">Chưa có tài khoản? 
+                                <a href="/Account/Register" class="text-success">Đăng ký ngay</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

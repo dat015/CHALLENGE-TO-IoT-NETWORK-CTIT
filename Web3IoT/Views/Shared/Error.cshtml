@@ -1,0 +1,32 @@
+﻿@model Web3IoT.ViewModel.ErrorViewModel
+@{
+    ViewData["Title"] = "Lỗi";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-exclamation-triangle me-1"></i>
+            Đã xảy ra lỗi
+        </div>
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <h4 class="alert-heading">Lỗi!</h4>
+                <p>Đã xảy ra lỗi khi xử lý yêu cầu của bạn.</p>
+                @if (Model.ShowRequestId)
+                {
+                    <p>
+                        <strong>Chi tiết lỗi:</strong> <code>@Model.RequestId</code>
+                    </p>
+                }
+            </div>
+            <div class="mt-3">
+                <a href="javascript:history.back()" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

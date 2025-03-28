@@ -6,6 +6,8 @@ using BlockChainForIoT.blockchain;
 using BlockChainForIoT.model;
 using BlockChainForIoT.data;
 using System.Text.Json;
+using BlockChainForIoT.dto;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlockChainForIoT.controllers
 {
@@ -55,6 +57,38 @@ namespace BlockChainForIoT.controllers
             }
         }
 
+        [HttpPost("register_sensor")]
+        public async Task<IActionResult> addSensor([FromBody] sensor_dto model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Không tìm thấy model");
+            }
+
+            var sensor = new Sensor()
+            {
+                Name = model.name,
+                sensorCode = model.sensorCode
+            };
+            try
+            {
+                await _context.Sensors.AddAsync(sensor);
+                await _context.SaveChangesAsync();
+
+                var id = await _context.Sensors
+                    .Where(s => s.Name == model.name && s.sensorCode == model.sensorCode)
+                    .FirstOrDefaultAsync();
+                    
+                return Ok(new { Message = "Register Success", SensorId = sensor.Id });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message, SensorId = 0 });
+            }
+
+
+        }
+
         [HttpPost("add_trans_action")]
         public async Task<IActionResult> AddBlockTransAction([FromBody] TransactionAction data)
         {
@@ -87,7 +121,7 @@ namespace BlockChainForIoT.controllers
                 };
                 _context.Crops.Add(crop);
                 await _context.SaveChangesAsync();
-
+                data.CropCode = crop.Id;
                 await _blockchain.AddBlock(data);
                 var latestBlock = _blockchain.GetLatestBlock();
                 return Ok(new { Message = "Crop registered", CropCode = data.CropCode, BlockIndex = latestBlock.Index, IpfsCid = latestBlock.IpfsCid });

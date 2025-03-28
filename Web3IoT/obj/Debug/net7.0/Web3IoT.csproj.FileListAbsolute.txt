@@ -1,0 +1,9 @@
+C:\Users\Thao\source\IoT\Web3IoT\obj\Debug\net7.0\Web3IoT.csproj.AssemblyReference.cache
+C:\Users\Thao\source\IoT\Web3IoT\obj\Debug\net7.0\Web3IoT.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Thao\source\IoT\Web3IoT\obj\Debug\net7.0\Web3IoT.AssemblyInfoInputs.cache
+C:\Users\Thao\source\IoT\Web3IoT\obj\Debug\net7.0\Web3IoT.AssemblyInfo.cs
+C:\Users\Thao\source\IoT\Web3IoT\obj\Debug\net7.0\Web3IoT.csproj.CoreCompileInputs.cache
+C:\Users\Thao\source\IoT\Web3IoT\obj\Debug\net7.0\Web3IoT.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Thao\source\IoT\Web3IoT\obj\Debug\net7.0\Web3IoT.RazorAssemblyInfo.cache
+C:\Users\Thao\source\IoT\Web3IoT\obj\Debug\net7.0\Web3IoT.RazorAssemblyInfo.cs
+C:\Users\Thao\source\IoT\Web3IoT\obj\Debug\net7.0\Web3IoT.sourcelink.json

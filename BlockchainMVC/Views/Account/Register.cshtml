@@ -1,0 +1,72 @@
+@model BlockchainMVC.Models.User
+
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Đăng ký tài khoản</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Register" method="post">
+                    <div class="form-group mb-3">
+                        <label asp-for="FullName">Họ và tên</label>
+                        <input asp-for="FullName" class="form-control" required />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Email">Email</label>
+                        <input asp-for="Email" type="email" class="form-control" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Password">Mật khẩu</label>
+                        <input asp-for="Password" type="password" class="form-control" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="ConfirmPassword">Xác nhận mật khẩu</label>
+                        <input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" required />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="PhoneNumber">Số điện thoại</label>
+                        <input asp-for="PhoneNumber" class="form-control" required />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Address">Địa chỉ</label>
+                        <input asp-for="Address" class="form-control" required />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="AccountType">Loại tài khoản</label>
+                        <select asp-for="AccountType" class="form-control" required>
+                            <option value="0">Nông dân</option>
+                            <option value="1">Nhà phân phối</option>
+                            <option value="2">Người tiêu dùng</option>
+                        </select>
+                        <span asp-validation-for="AccountType" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Đăng ký</button>
+                        <a asp-action="Login" class="btn btn-secondary">Đã có tài khoản? Đăng nhập</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

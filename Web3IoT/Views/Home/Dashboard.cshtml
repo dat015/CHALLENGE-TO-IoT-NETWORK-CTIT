@@ -1,0 +1,273 @@
+@{
+    ViewData["Title"] = "Bảng điều khiển";
+}
+
+<div class="container py-4">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-2">Xin chào, Admin!</h2>
+                            <p class="text-muted mb-0">Chào mừng bạn đến với hệ thống quản lý nông trại thông minh</p>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <a href="#" class="btn btn-success">
+                                <i class="fas fa-plus me-2"></i>Thêm mới
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="bg-success bg-opacity-10 p-3 rounded-circle">
+                                <i class="fas fa-seedling fa-2x text-success"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1">Cây trồng</h6>
+                            <h3 class="mb-0">150</h3>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-success" style="width: 75%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="bg-info bg-opacity-10 p-3 rounded-circle">
+                                <i class="fas fa-microchip fa-2x text-info"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1">Cảm biến</h6>
+                            <h3 class="mb-0">45</h3>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-info" style="width: 60%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="bg-warning bg-opacity-10 p-3 rounded-circle">
+                                <i class="fas fa-flask fa-2x text-warning"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1">Phân bón</h6>
+                            <h3 class="mb-0">25</h3>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-warning" style="width: 45%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="bg-danger bg-opacity-10 p-3 rounded-circle">
+                                <i class="fas fa-bug-slash fa-2x text-danger"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1">Thuốc BVTV</h6>
+                            <h3 class="mb-0">18</h3>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-danger" style="width: 30%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-bolt me-2"></i>Thao tác nhanh
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <a href="/Crop/Create" class="card border-0 shadow-sm h-100 text-decoration-none">
+                                <div class="card-body text-center p-4">
+                                    <div class="bg-success bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                        <i class="fas fa-seedling fa-2x text-success"></i>
+                                    </div>
+                                    <h5 class="card-title text-dark">Thêm cây trồng</h5>
+                                    <p class="card-text text-muted">Thêm mới cây trồng vào hệ thống</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/Sensor/Create" class="card border-0 shadow-sm h-100 text-decoration-none">
+                                <div class="card-body text-center p-4">
+                                    <div class="bg-info bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                        <i class="fas fa-microchip fa-2x text-info"></i>
+                                    </div>
+                                    <h5 class="card-title text-dark">Thêm cảm biến</h5>
+                                    <p class="card-text text-muted">Thêm mới cảm biến vào hệ thống</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/Fertilizer/Create" class="card border-0 shadow-sm h-100 text-decoration-none">
+                                <div class="card-body text-center p-4">
+                                    <div class="bg-warning bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                        <i class="fas fa-flask fa-2x text-warning"></i>
+                                    </div>
+                                    <h5 class="card-title text-dark">Thêm phân bón</h5>
+                                    <p class="card-text text-muted">Thêm mới phân bón vào hệ thống</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/Pesticide/Create" class="card border-0 shadow-sm h-100 text-decoration-none">
+                                <div class="card-body text-center p-4">
+                                    <div class="bg-danger bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                        <i class="fas fa-bug-slash fa-2x text-danger"></i>
+                                    </div>
+                                    <h5 class="card-title text-dark">Thêm thuốc BVTV</h5>
+                                    <p class="card-text text-muted">Thêm mới thuốc BVTV vào hệ thống</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-history me-2"></i>Hoạt động gần đây
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Thêm mới cây trồng</h6>
+                                <p class="text-muted mb-0">Lúa giống ST25 - 2 giờ trước</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-info"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Cập nhật cảm biến</h6>
+                                <p class="text-muted mb-0">Cảm biến độ ẩm - 3 giờ trước</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-warning"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Thêm phân bón</h6>
+                                <p class="text-muted mb-0">NPK 20-20-15 - 4 giờ trước</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-danger"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Thêm thuốc BVTV</h6>
+                                <p class="text-muted mb-0">Thuốc trừ sâu sinh học - 5 giờ trước</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line me-2"></i>Thống kê
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <canvas id="statisticsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize Chart
+        const ctx = document.getElementById('statisticsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+                datasets: [{
+                    label: 'Sản lượng (tấn)',
+                    data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 40, 38, 45],
+                    borderColor: '#28a745',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: true,
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+} 
