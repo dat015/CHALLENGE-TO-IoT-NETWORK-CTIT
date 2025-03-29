@@ -5,6 +5,14 @@
       "PackagePath": "staticwebassets\\Web3IoT.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\Thao\\source\\IoT\\Web3IoT\\wwwroot\\css\\control_device.css",
+      "PackagePath": "staticwebassets\\css\\control_device.css"
+    },
+    {
+      "Id": "C:\\Users\\Thao\\source\\IoT\\Web3IoT\\wwwroot\\css\\sensor-modal.css",
+      "PackagePath": "staticwebassets\\css\\sensor-modal.css"
+    },
+    {
       "Id": "C:\\Users\\Thao\\source\\IoT\\Web3IoT\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

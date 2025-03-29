@@ -146,5 +146,27 @@ namespace Web3IoT.Controllers
         {
             return _context.Sensors.Any(e => e.Id == id);
         }
+
+        [HttpGet]
+        [Route("/Sensor/SensorDataModal")]
+
+        public IActionResult SensorDataModal(int id)
+        {
+            var sensor = _context.Sensors.Find(id);
+            if (sensor == null) return NotFound();
+
+            return View(sensor);
+        }
+        [HttpGet]
+        [Route("/Sensor/DeviceControl")]
+        public IActionResult DeviceControl(int id)
+        {
+            var sensor = _context.Sensors.FirstOrDefault(s => s.Id == id); 
+            if (sensor == null)
+            {
+                return NotFound();
+            }
+            return View(sensor);
+        }
     }
 }

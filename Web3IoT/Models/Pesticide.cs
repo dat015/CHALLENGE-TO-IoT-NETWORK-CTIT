@@ -41,12 +41,9 @@ namespace Web3IoT.Models
         public string? Description { get; set; }
 
 
-      
-        [Required]
-        [ForeignKey("Crop")]
-        public int CropCode { get; set; }
 
-        // Navigation properties
+
+        public int CropCode { get; set; }
         public virtual Crop? Crops { get; set; }
     }
-} 
+}

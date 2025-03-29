@@ -59,9 +59,16 @@
             </div>
 
             <div class="form-group mt-3">
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Sửa</a>
+                <a  class="btn btn-warning" asp-action="SensorDataModal" asp-route-id=@Model.Id>
+                    Xem Cảm biến
+                </a>
+                <a  class="btn btn-primary" asp-action="DeviceControl" asp-route-id=@Model.Id>
+                    Điều Khiển
+                </a>
                 <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
             </div>
         </div>
     </div>
-</div> 
+</div>
+
+

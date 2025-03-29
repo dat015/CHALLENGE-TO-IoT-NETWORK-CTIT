@@ -42,7 +42,6 @@ namespace Web3IoT.Models
 
         [Required]
         public int FarmId { get; set; }
-
         // Navigation properties
         public virtual Farm? Farm { get; set; }
         public virtual ICollection<Crop>? Crops { get; set; } = new List<Crop>();

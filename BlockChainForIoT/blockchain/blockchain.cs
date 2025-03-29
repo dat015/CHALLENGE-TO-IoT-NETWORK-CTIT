@@ -82,7 +82,7 @@ namespace BlockChainForIoT.blockchain
                     {
                         _authorityManager.AddGenesisBlock(Chain);
                         LatestIpfsCid = await _ipfsService.PublishToIpfsAsync(Chain);
-                        await _ipfsService.UpdateMetadataOnIpfs(); // Cập nhật metadata mặc định
+                        // await _ipfsService.UpdateMetadataOnIpfs(); // Cập nhật metadata mặc đjịnh
                         MetadataCid = _ipfsService.MetadataCid;
                     }
                 }
@@ -93,7 +93,7 @@ namespace BlockChainForIoT.blockchain
                 Chain.Clear();
                 _authorityManager.AddGenesisBlock(Chain);
                 LatestIpfsCid = await _ipfsService.PublishToIpfsAsync(Chain);
-                await _ipfsService.UpdateMetadataOnIpfs();
+                // await _ipfsService.UpdateMetadataOnIpfs();
                 MetadataCid = _ipfsService.MetadataCid;
             }
 

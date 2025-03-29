@@ -12,7 +12,9 @@ builder.Services.AddControllersWithViews();
 // Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+// Add services to the container.
+// builder.Services.AddSingleton<MqttService>();
+// builder.Services.AddHostedService<MqttHostedService>();
 // Add Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -24,15 +26,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;
     });
 
-builder.Services.AddHttpClient();
-
-// Add MqttService as Singleton
-builder.Services.AddSingleton<MqttService>();
-
-// Add SensorDataService as HostedService
-builder.Services.AddHostedService<SensorDataService>();
-
-// Add Authorization
+ builder.Services.AddHttpClient();
+// builder.Services.AddScoped<MqttService>();
+// builder.Services.AddHostedService<MqttInitializationService>();
+// builder.Services.AddHostedService<BlockchainSyncService>();
+// // Add Authorization
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireFarmerRole", policy => policy.RequireRole("Farmer"));
@@ -40,28 +38,7 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-// Initialize MqttService and subscribe to all sensors
-try
-{
-    using var scope = app.Services.CreateScope();
-    var mqttService = scope.ServiceProvider.GetRequiredService<MqttService>();
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-    // Khởi tạo MQTT service
-    await mqttService.InitializeAsync();
-
-    // Subscribe vào tất cả các sensor
-    var sensors = await dbContext.Sensors.ToListAsync();
-    foreach (var sensor in sensors)
-    {
-        await mqttService.SubscribeToSensorAsync(sensor.Name);
-    }
-}
-catch (Exception ex)
-{
-    var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "Lỗi khởi tạo MQTT Service");
-}
 
 using (var scope = app.Services.CreateScope())
 {
@@ -97,7 +74,7 @@ using (var scope = app.Services.CreateScope())
         dbContext.SaveChanges();
     }
 
-    
+
 }
 
 // Configure the HTTP request pipeline.

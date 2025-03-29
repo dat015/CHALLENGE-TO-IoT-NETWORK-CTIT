@@ -1,0 +1,227 @@
+@model Web3IoT.Models.Sensor
+
+@{
+    ViewData["Title"] = "Điều khiển thiết bị";
+}
+
+<link rel="stylesheet" href="~/css/control_device.css" />
+
+<section id="deviceControl" class="section">
+    <h1 class="section-title">Điều khiển thiết bị</h1>
+
+    <div class="device-control">
+        <div class="control-card">
+            <h2>Điều khiển thiết bị</h2>
+            <div class="control-buttons">
+                <button id="fanButton" class="control-btn fan-btn" onclick="toggleFan()">Bật Quạt</button>
+                <button id="pumpButton" class="control-btn pump-btn" onclick="togglePump()">Bật Bơm</button>
+            </div>
+            <div class="status" id="controlStatus">Đang chờ lệnh...</div>
+        </div>
+
+        <div class="control-card">
+            <h2>Thiết lập thời gian ngủ</h2>
+            <div class="time-container">
+                <input type="number" id="hours" min="0" max="23" placeholder="hh">
+                <span>:</span>
+                <input type="number" id="minutes" min="0" max="59" placeholder="mm">
+                <span>:</span>
+                <input type="number" id="seconds" min="0" max="59" placeholder="ss">
+                <button style="margin-top:10px;" class="btn btn-success" onclick="controlSleep()">Bật Ngủ</button>
+
+            </div>
+            <div class="status" id="sleepStatus">Đang chờ lệnh...</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <a class="btn btn-warning" asp-action="SensorDataModal" asp-route-id="@Model.Id">
+            Xem Cảm biến
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
+</section>
+
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof mqtt === 'undefined') {
+            console.error('Thư viện mqtt.js không được tải.');
+            document.getElementById('controlStatus').textContent = 'Lỗi: Thư viện MQTT không được tải.';
+            document.getElementById('sleepStatus').textContent = 'Lỗi: Thư viện MQTT không được tải.';
+            return;
+        }
+
+        const sensorId = '@Model.SensorCode';
+        const sensorName = '@Model.Name';
+        let mqttClient;
+        let fanState = false;
+        let pumpState = false;
+
+        function initializeControl() {
+            const mqttServer = 'wss://test.mosquitto.org:8081/mqtt';
+            mqttClient = mqtt.connect(mqttServer, {
+                clientId: sensorName + '_' + Math.random().toString(16).substr(2, 8),
+                clean: true,
+                connectTimeout: 4000,
+                reconnectPeriod: 1000
+            });
+
+            mqttClient.on('connect', () => {
+                console.log('Đã kết nối tới MQTT');
+                document.getElementById('controlStatus').textContent = 'Đã kết nối tới MQTT';
+                document.getElementById('sleepStatus').textContent = 'Đã kết nối tới MQTT';
+            });
+
+            mqttClient.on('error', (err) => {
+                console.error('Lỗi MQTT:', err);
+                document.getElementById('controlStatus').textContent = 'Lỗi kết nối: ' + err.message;
+                document.getElementById('sleepStatus').textContent = 'Lỗi kết nối: ' + err.message;
+            });
+
+            mqttClient.on('close', () => {
+                console.log('Kết nối MQTT đã đóng');
+                document.getElementById('controlStatus').textContent = 'Ngắt kết nối';
+                document.getElementById('sleepStatus').textContent = 'Ngắt kết nối';
+            });
+        }
+
+        // Hàm lấy địa chỉ IP
+        async function getIpAddress() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                const ip = data.ip; // Ví dụ: "192.168.1.1"
+                console.log('Địa chỉ IP:', ip);
+                return ip;
+            } catch (error) {
+                console.error('Lỗi khi lấy IP:', error);
+                return '0.0.0.0'; // Trả về IP mặc định nếu không lấy được
+            }
+        }
+
+        // Hàm gửi dữ liệu lên blockchain
+        async function sendToBlockchain(action, device) {
+            const now = new Date();
+            const timestamp = now.toISOString(); // Ví dụ: "2025-03-28T08:05:42.281Z"
+            const ipAddress = await getIpAddress(); // Lấy địa chỉ IP
+
+            const data = {
+                timestamp: timestamp,
+                action: action,
+                receiver: ipAddress, // Sử dụng địa chỉ IP làm receiver
+                sender: sensorId // Sử dụng sensorId làm sender
+            };
+
+            try {
+                const response = await fetch('http://localhost:80/api/Blockchain/add_trans_action', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                console.log(JSON.stringify(data));
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                //console.log(`Gửi lên blockchain thành công (${device}):`, result);
+                //document.getElementById('controlStatus').textContent += ` | Đã ghi lên blockchain`;
+            } catch (error) {
+                console.error(`Lỗi khi gửi lên blockchain (${device}):`, error);
+                //document.getElementById('controlStatus').textContent += ` | Lỗi ghi blockchain: ${error.message}`;
+            }
+        }
+
+        window.toggleFan = function () {
+            fanState = !fanState;
+            const command = fanState ? 'ON' : 'OFF';
+            const topic = `${sensorName}/fan`;
+            const action = fanState ? 'Bật Quạt' : 'Tắt Quạt';
+
+            if (mqttClient && mqttClient.connected) {
+                mqttClient.publish(topic, command, { qos: 1 }, (err) => {
+                    if (err) {
+                        console.error('Lỗi khi gửi lệnh quạt:', err);
+                        document.getElementById('controlStatus').textContent = 'Lỗi: ' + err.message;
+                    } else {
+                        console.log(`Đã gửi lệnh quạt: ${command} tới topic ${topic}`);
+                        document.getElementById('controlStatus').textContent = fanState ? 'Quạt: Bật' : 'Quạt: Tắt';
+                        document.getElementById('fanButton').textContent = fanState ? 'Tắt Quạt' : 'Bật Quạt';
+                        document.getElementById('fanButton').classList.toggle('on', fanState);
+                        document.getElementById('fanButton').classList.toggle('off', !fanState);
+
+                        // Gửi lên blockchain sau khi gửi MQTT thành công
+                        sendToBlockchain(action, 'Quạt');
+                    }
+                });
+            } else {
+                document.getElementById('controlStatus').textContent = 'Chưa kết nối tới MQTT broker';
+            }
+        };
+
+        window.togglePump = function () {
+            pumpState = !pumpState;
+            const command = pumpState ? 'ON' : 'OFF';
+            const topic = `${sensorName}/pump`;
+            const action = pumpState ? 'Bật Bơm' : 'Tắt Bơm';
+
+            if (mqttClient && mqttClient.connected) {
+                mqttClient.publish(topic, command, { qos: 1 }, (err) => {
+                    if (err) {
+                        console.error('Lỗi khi gửi lệnh bơm:', err);
+                        document.getElementById('controlStatus').textContent = 'Lỗi: ' + err.message;
+                    } else {
+                        console.log(`Đã gửi lệnh bơm: ${command} tới topic ${topic}`);
+                        document.getElementById('controlStatus').textContent = pumpState ? 'Bơm: Bật' : 'Bơm: Tắt';
+                        document.getElementById('pumpButton').textContent = pumpState ? 'Tắt Bơm' : 'Bật Bơm';
+                        document.getElementById('pumpButton').classList.toggle('on', pumpState);
+                        document.getElementById('pumpButton').classList.toggle('off', !pumpState);
+
+                        // Gửi lên blockchain sau khi gửi MQTT thành công
+                        sendToBlockchain(action, 'Bơm');
+                    }
+                });
+            } else {
+                document.getElementById('controlStatus').textContent = 'Chưa kết nối tới MQTT broker';
+            }
+        };
+
+        window.controlSleep = function () {
+            let hours = parseInt(document.getElementById("hours").value) || 0;
+            let minutes = parseInt(document.getElementById("minutes").value) || 0;
+            let seconds = parseInt(document.getElementById("seconds").value) || 0;
+
+            let sleepTime = hours * 3600 + minutes * 60 + seconds;
+
+            if (isNaN(sleepTime) || sleepTime <= 0) {
+                document.getElementById('sleepStatus').textContent = 'Vui lòng thiết lập thời gian trước!';
+                return;
+            }
+
+            const topic = `${sensorName}/sleep`; 
+            const command = 'ON'; 
+
+            if (mqttClient && mqttClient.connected) {
+                mqttClient.publish(topic, command, { qos: 1 }, (err) => {
+                    if (err) {
+                        console.error('Lỗi khi bật chế độ ngủ:', err);
+                        document.getElementById('sleepStatus').textContent = 'Lỗi: ' + err.message;
+                    } else {
+                        console.log(`Đã gửi lệnh bật ngủ "ON" tới topic ${topic}`);
+                        document.getElementById('sleepStatus').textContent = `Đã bật: Ngủ ${sleepTime} giây`;
+                        sendToBlockchain(`Bật chế độ ngủ ${sleepTime} giây`, 'Thiết bị');
+                    }
+                });
+            } else {
+                document.getElementById('sleepStatus').textContent = 'Chưa kết nối tới MQTT broker';
+            }
+        };
+
+        requestAnimationFrame(() => initializeControl());
+    });
+</script>

@@ -1,0 +1,130 @@
+.section {
+    padding: 40px;
+    background-color: #f5f7fa;
+    border-radius: 12px;
+    max-width: 1400px; /* Tăng kích thước tối đa của section */
+    margin: 0 auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Thêm bóng nhẹ */
+}
+
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    max-width: 1200px; /* Tăng kích thước tối đa của container */
+    width: 100%;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e9ecef; /* Thêm viền nhẹ */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: 500;
+}
+
+.card .value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+.card .unit {
+    font-size: 1.2rem;
+    color: #666;
+    display: block;
+}
+
+.card .status {
+    font-size: 1rem;
+    color: #888;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.chart-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Sắp xếp biểu đồ theo lưới */
+    gap: 30px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.chart-container {
+    width: 100%;
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef; /* Thêm viền nhẹ */
+}
+
+.chart-container h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+    font-weight: 500;
+}
+
+canvas {
+    width: 100% !important;
+    height: 220px !important;
+}
+
+@media (max-width: 768px) {
+    .section {
+        padding: 20px;
+    }
+
+    .container {
+        gap: 20px;
+        max-width: 100%;
+    }
+
+    .card {
+        max-width: 100%;
+    }
+
+    .chart-section {
+        grid-template-columns: 1fr; /* Xếp dọc trên màn hình nhỏ */
+    }
+
+    .chart-container {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .chart-section {
+        grid-template-columns: repeat(3, 1fr); /* 3 biểu đồ trên 1 hàng nếu màn hình lớn */
+    }
+} 

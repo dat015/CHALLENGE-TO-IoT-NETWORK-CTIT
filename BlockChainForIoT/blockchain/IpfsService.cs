@@ -70,6 +70,7 @@ namespace BlockChainForIoT.blockchain
                     MetadataCid = latestCids.MetadataCid;
                     LatestIpfsCid = latestCids.LatestIpfsCid;
                     Console.WriteLine($"Using existing CIDs from Pinata: MetadataCid={MetadataCid}, LatestIpfsCid={LatestIpfsCid}");
+                    await RestoreDictionariesFromIpfs();
                 }
             }
             catch (Exception ex)
@@ -99,15 +100,15 @@ namespace BlockChainForIoT.blockchain
                 string json = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"Raw Pinata API response: {json}");
 
-                try 
+                try
                 {
                     // Thử deserialize trực tiếp để xem cấu trúc JSON
                     var rawResponse = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
                     Console.WriteLine($"Response structure: {JsonSerializer.Serialize(rawResponse, new JsonSerializerOptions { WriteIndented = true })}");
 
                     // Cập nhật model class để khớp với cấu trúc JSON thực tế
-                    var pinList = JsonSerializer.Deserialize<PinataPinListResponse>(json, new JsonSerializerOptions 
-                    { 
+                    var pinList = JsonSerializer.Deserialize<PinataPinListResponse>(json, new JsonSerializerOptions
+                    {
                         PropertyNameCaseInsensitive = true,
                         AllowTrailingCommas = true,
                         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
@@ -133,7 +134,7 @@ namespace BlockChainForIoT.blockchain
                         .OrderByDescending(r => r.DatePinned)
                         .ToList();
                     Console.WriteLine($"Found {chainFiles.Count} chain files");
-
+                        
                     // In ra tất cả các file để debug
                     foreach (var file in metadataFiles)
                     {

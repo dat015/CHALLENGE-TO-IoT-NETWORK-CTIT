@@ -152,65 +152,158 @@ namespace Web3IoT.Controllers
             }
             return View("Index");
         }
-        // // GET: Crop/Details/5
-        // public async Task<IActionResult> Details(int? id)
-        // {
-        //     if (id == null)
-        //     {
-        //         return NotFound();
-        //     }
 
-        //     try
-        //     {
-        //         var httpClient = _httpClientFactory.CreateClient();
-        //         httpClient.BaseAddress = new Uri("http://localhost:80/");
-        //         var response = await httpClient.GetAsync($"api/blockchain/crop/{id}");
-        //         response.EnsureSuccessStatusCode();
-        //         var crop = await response.Content.ReadFromJsonAsync<Crop>();
+        [HttpGet]
+        [Route("/Crop/FertilizeCrop")]
+        public async Task<IActionResult> FertilizeCrop(int id)
+        {
+            var crop = await _context.Crops.FindAsync(id);
+            if (crop == null) return NotFound();
 
-        //         if (crop == null)
-        //         {
-        //             return NotFound();
-        //         }
-        //         return View(crop);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         _logger.LogError(ex, "Error fetching crop details for ID: {Id}", id);
-        //         return View("Error");
-        //     }
-        // }
+            var fertilizer = new Fertilizer
+            {
+                CropCode = crop.CropCode,
+                Timestamp = DateTime.Now,
+                Name = string.Empty,
+                Type = string.Empty,
+                Description = string.Empty,
+                Quantity = 0
+            };
+            ViewData["Crop"] = crop;
+            return PartialView("_FertilizeCropPartial", fertilizer);
+        }
 
-        // // GET: Crop/Edit/5
-        // public async Task<IActionResult> Edit(int? id)
-        // {
-        //     if (id == null)
-        //     {
-        //         return NotFound();
-        //     }
+        [HttpPost]
+        [Route("/Crop/FertilizeCrop")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> FertilizeCrop(Fertilizer fertilizer)
+        {
 
-        //     try
-        //     {
-        //         var httpClient = _httpClientFactory.CreateClient();
-        //         httpClient.BaseAddress = new Uri("http://localhost:80/");
-        //         var response = await httpClient.GetAsync($"api/blockchain/crop/{id}");
-        //         response.EnsureSuccessStatusCode();
-        //         var crop = await response.Content.ReadFromJsonAsync<Crop>();
+            if (ModelState.IsValid)
+            {
 
-        //         if (crop == null)
-        //         {
-        //             return NotFound();
-        //         }
-        //         return View(crop);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         _logger.LogError(ex, "Error fetching crop for edit with ID: {Id}", id);
-        //         return View("Error");
-        //     }
-        // }
 
-        // POST: Crop/Edit/5
+                var crop = await _context.Crops
+                    .Where(c => c.CropCode == fertilizer.CropCode)
+                    .FirstOrDefaultAsync();
+                if (crop == null)
+                {
+                    _logger.LogError("Crop with CropCode {CropCode} not found.", fertilizer.CropCode);
+                    return Json(new { success = false, message = "Không tìm thấy cây trồng." });
+                }
+                _context.Fertilizers.Add(fertilizer);
+                await _context.SaveChangesAsync();
 
+                var httpClient = _httpClientFactory.CreateClient();
+                httpClient.BaseAddress = new Uri("http://localhost:80/");
+
+                var data = new
+                {
+                    cropCode = crop.CropCode,
+                    timestamp = DateTime.UtcNow,
+                    fertilizerName = fertilizer.Name,
+                    quantity = fertilizer.Quantity,
+                    description = fertilizer.Description
+                };
+
+                try
+                {
+                    var response = await httpClient.PostAsJsonAsync("api/blockchain/add_fertilizing", data);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var errorContent = await response.Content.ReadAsStringAsync();
+                        _logger.LogError("API add_fertilizing failed with status {StatusCode}: {ErrorContent}", response.StatusCode, errorContent);
+                        return Json(new { success = false, message = "Không thể đăng ký fertilizer trên blockchain." });
+                    }
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogInformation("API response: {Response}", responseContent);
+                    return Json(new { success = true });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error calling blockchain API.");
+                    return Json(new { success = false, message = "Lỗi hệ thống khi gọi API blockchain." });
+                }
+            }
+
+            ViewData["Crop"] = await _context.Crops.FindAsync(fertilizer.CropCode);
+            return PartialView("_FertilizeCropPartial", fertilizer);
+        }
+
+        [HttpGet]
+        [Route("/Crop/Spray")]
+        public async Task<IActionResult> Spray(int id)
+        {
+            var crop = await _context.Crops.FindAsync(id);
+            if (crop == null) return NotFound();
+
+            var pesticide = new Pesticide
+            {
+                CropCode = crop.CropCode,
+                Timestamp = DateTime.Now,
+                Name = string.Empty,         // Gán giá trị mặc định cho Name
+                Type = string.Empty,         // Gán giá trị mặc định cho Type
+                Quantity = 0,                // Gán giá trị mặc định cho Quantity
+                Description = null           // Description không bắt buộc, có thể để null
+            };
+            ViewData["Crop"] = crop;
+            return PartialView("_SprayPartial", pesticide);
+        }
+
+        [HttpPost]
+        [Route("/Crop/Spray")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Spray(Pesticide pesticide)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+
+
+                    var crop = await _context.Crops.FirstOrDefaultAsync(c => c.CropCode == pesticide.CropCode);
+                    if (crop == null)
+                    {
+                        _logger.LogError("Crop with CropCode {CropCode} not found.", pesticide.CropCode);
+                        return Json(new { success = false, message = "Không tìm thấy cây trồng." });
+                    }
+                    _context.Pesticides.Add(pesticide);
+                    await _context.SaveChangesAsync();
+                    var httpClient = _httpClientFactory.CreateClient();
+                    httpClient.BaseAddress = new Uri("http://localhost:80/");
+
+                    var data = new
+                    {
+                        cropCode = crop.CropCode,
+                        timestamp = DateTime.UtcNow,
+                        pesticideName = pesticide.Name,
+                        pesticideType = pesticide.Type,
+                        quantity = pesticide.Quantity,
+                        description = pesticide.Description
+                    };
+
+                    var response = await httpClient.PostAsJsonAsync("api/blockchain/add_spraying", data);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var errorContent = await response.Content.ReadAsStringAsync();
+                        _logger.LogError("API add_spraying failed with status {StatusCode}: {ErrorContent}", response.StatusCode, errorContent);
+                        return Json(new { success = false, message = "Không thể đăng ký thông tin phun thuốc trên blockchain." });
+                    }
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogInformation("API response: {Response}", responseContent);
+                    return Json(new { success = true });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error processing pesticide data");
+                    return Json(new { success = false, message = "Có lỗi xảy ra khi xử lý dữ liệu." });
+                }
+            }
+
+            ViewData["Crop"] = await _context.Crops.FirstOrDefaultAsync(c => c.CropCode == pesticide.CropCode);
+            return PartialView("_SprayPartial", pesticide);
+        }
     }
 }

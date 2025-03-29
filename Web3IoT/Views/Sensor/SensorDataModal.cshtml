@@ -1,0 +1,171 @@
+@model Web3IoT.Models.Sensor
+
+<link rel="stylesheet" href="~/css/sensor-modal.css" />
+
+<section id="sensorDashboard" class="section">
+    <div class="container">
+        <div class="card">
+            <h2>Nhiệt độ</h2>
+            <span class="value" id="temperature">0</span>
+            <span class="unit">°C</span>
+            <div class="status" id="tempStatus">Đang kết nối...</div>
+        </div>
+        <div class="card">
+            <h2>Độ ẩm không khí</h2>
+            <span class="value" id="humidity">0</span>
+            <span class="unit">%</span>
+            <div class="status" id="humidStatus">Đang kết nối...</div>
+        </div>
+        <div class="card">
+            <h2>Độ ẩm đất</h2>
+            <span class="value" id="soilMoisture">0</span>
+            <span class="unit">%</span>
+            <div class="status" id="soilStatus">Đang kết nối...</div>
+        </div>
+    </div>
+
+    <div class="chart-section">
+        <div class="chart-container">
+            <h3>Nhiệt độ (°C)</h3>
+            <canvas id="tempChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Độ ẩm không khí (%)</h3>
+            <canvas id="humidityChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Độ ẩm đất (%)</h3>
+            <canvas id="soilMoistureChart"></canvas>
+        </div>
+    </div>
+</section>
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof mqtt === 'undefined') {
+            console.error('Thư viện mqtt.js không được tải.');
+            document.getElementById('tempStatus').textContent = 'Lỗi: Thư viện MQTT không được tải.';
+            document.getElementById('humidStatus').textContent = 'Lỗi: Thư viện MQTT không được tải.';
+            document.getElementById('soilStatus').textContent = 'Lỗi: Thư viện MQTT không được tải.';
+            return;
+        }
+
+        // Lấy topic từ Razor
+        const sensorTopic = '@Model.Name';
+
+        function initializeSensorDashboard() {
+            const tempChart = createChart('tempChart', 'Nhiệt độ (°C)', '#00ffcc');
+            const humidityChart = createChart('humidityChart', 'Độ ẩm không khí (%)', '#ffeb3b');
+            const soilMoistureChart = createChart('soilMoistureChart', 'Độ ẩm đất (%)', '#32cd32');
+
+            if (!tempChart || !humidityChart || !soilMoistureChart) {
+                console.error('Không thể khởi tạo biểu đồ');
+                return;
+            }
+
+            function createChart(canvasId, label, borderColor) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const ctx = canvas.getContext('2d');
+                return new Chart(ctx, {
+                    type: 'bar', // Sử dụng biểu đồ cột ngang
+                    data: {
+                        labels: ['Giá trị'],
+                        datasets: [{
+                            label: label,
+                            data: [0],
+                            backgroundColor: borderColor,
+                            borderColor: borderColor,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y', // Đặt trục Y nằm ngang
+                        scales: {
+                            x: {
+                                display: true,
+                                title: { display: true, text: 'Giá trị' },
+                                beginAtZero: true,
+                                max: 100 // Giả sử giá trị tối đa là 100
+                            },
+                            y: {
+                                display: true,
+                                title: { display: true, text: 'Thời gian' }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: true, position: 'top' }
+                        }
+                    }
+                });
+            }
+
+            function updateDashboard(data) {
+                if (!data) return;
+
+                document.getElementById('temperature').textContent = `${data.temperature || 0} `;
+                document.getElementById('humidity').textContent = `${data.humidity || 0} `;
+                document.getElementById('soilMoisture').textContent = `${data.soilMoisture || 0} `;
+
+                document.getElementById('tempStatus').textContent = 'Đã cập nhật';
+                document.getElementById('humidStatus').textContent = 'Đã cập nhật';
+                document.getElementById('soilStatus').textContent = 'Đã cập nhật';
+
+                tempChart.data.datasets[0].data = [data.temperature || 0];
+                humidityChart.data.datasets[0].data = [data.humidity || 0];
+                soilMoistureChart.data.datasets[0].data = [data.soilMoisture || 0];
+
+                tempChart.update();
+                humidityChart.update();
+                soilMoistureChart.update();
+            }
+
+            const mqttServer = 'wss://test.mosquitto.org:8081/mqtt';
+            const mqttClient = mqtt.connect(mqttServer, {
+                clientId: sensorTopic + '_' + Math.random().toString(16).substr(2, 8),
+                clean: true,
+                connectTimeout: 4000,
+                reconnectPeriod: 1000
+            });
+
+            mqttClient.on('connect', () => {
+                console.log('Đã kết nối tới MQTT');
+                document.getElementById('tempStatus').textContent = 'Đã kết nối';
+                document.getElementById('humidStatus').textContent = 'Đã kết nối';
+                document.getElementById('soilStatus').textContent = 'Đã kết nối';
+
+                mqttClient.subscribe(sensorTopic, { qos: 1 }, (err) => {
+                    if (err) console.error('Lỗi đăng ký topic:', err);
+                    else console.log(`Đã đăng ký topic: ${sensorTopic}`);
+                });
+            });
+
+            mqttClient.on('message', (topic, message) => {
+                try {
+                    const data = JSON.parse(message.toString());
+                    updateDashboard(data);
+                } catch (e) {
+                    console.error('JSON không hợp lệ:', e);
+                }
+            });
+
+            mqttClient.on('error', (err) => {
+                console.error('Lỗi MQTT:', err);
+                document.getElementById('tempStatus').textContent = 'Lỗi kết nối';
+                document.getElementById('humidStatus').textContent = 'Lỗi kết nối';
+                document.getElementById('soilStatus').textContent = 'Lỗi kết nối';
+            });
+
+            mqttClient.on('close', () => {
+                console.log('Kết nối MQTT đã đóng');
+                document.getElementById('tempStatus').textContent = 'Ngắt kết nối';
+                document.getElementById('humidStatus').textContent = 'Ngắt kết nối';
+                document.getElementById('soilStatus').textContent = 'Ngắt kết nối';
+            });
+        }
+
+        requestAnimationFrame(() => initializeSensorDashboard());
+    });
+</script>

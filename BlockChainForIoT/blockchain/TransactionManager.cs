@@ -66,8 +66,7 @@ namespace BlockChainForIoT.blockchain
             // Cập nhật IdToCids
             UpdateDictionaries(jsonData, blockCid);
 
-            // Cập nhật metadata và chuỗi trên Pinata
-            await _ipfsService.UpdateMetadataOnIpfs();
+            
             await _ipfsService.PublishToIpfsAsync(_chain);
         }
 

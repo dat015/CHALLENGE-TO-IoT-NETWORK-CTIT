@@ -36,22 +36,22 @@ namespace Web3IoT.Controllers
             if (code == "")
             {
                 _logger.LogWarning("Invalid code: {Code}", code);
-                return View("Error");
+                return View("Index");
             }
             if (string.IsNullOrEmpty(code) || !int.TryParse(code, out int cropId))
             {
                 _logger.LogWarning("Invalid code format: {Code}", code);
-                return View("Error");
+                return View("Index");
             }
 
             try
             {
-                var traces = await TraceCropAsync(cropId);
-                if (traces == null)
-                {
-                    _logger.LogWarning("TraceCropAsync returned null for code: {Code}", code);
-                    return View("Error");
-                }
+                var traces = await TraceCropAsync(cropId) ?? new List<CropTrace>();
+                // if (traces == null)
+                // {
+                //     _logger.LogWarning("TraceCropAsync returned null for code: {Code}", code);
+                //     return View("Error");
+                // }
 
                 ViewBag.Traces = traces;
                 ViewBag.Code = code;
@@ -61,7 +61,7 @@ namespace Web3IoT.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching trace data for code: {Code}", code);
-                return View("Error");
+                return View("Index");
             }
         }
 
